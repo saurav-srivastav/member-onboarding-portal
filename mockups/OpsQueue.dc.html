@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: "IBM Plex Sans", -apple-system, sans-serif; color: #1a2332; }
+    a { color: #c0392f; } a:hover { color: #92251d; }
+    .h { font-family: "Schibsted Grotesk", sans-serif; }
+    .mono { font-family: "IBM Plex Mono", monospace; }
+    td { padding: 13px 16px; border-bottom: 1px solid #eeece7; font-size: 13.5px; vertical-align: middle; }
+    th { padding: 9px 16px; text-align: left; font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: #8b95a5; border-bottom: 1px solid #d8d4cc; }
+  </style>
+</helmet>
+<div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Operations</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; font-size: 13.5px;">
+      <span style="color: #ffffff; font-weight: 600; border-bottom: 2px solid #e0685c; padding-bottom: 2px;">Queue</span>
+      <span style="color: #8b95a5;">Pipeline</span>
+      <span style="color: #8b95a5;">Metrics</span>
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">OP</div>
+    </div>
+  </div>
+
+  <div style="padding: 28px 40px 0; flex-shrink: 0;">
+    <h1 class="h" style="margin: 0 0 4px; font-size: 24px; font-weight: 700;">Operations queue</h1>
+    <p style="margin: 0; font-size: 14px; color: #5a6473;">Ordered by time waiting on Operations — longest wait first.</p>
+  </div>
+
+  <div style="display: flex; gap: 16px; padding: 20px 40px 0; flex-shrink: 0;">
+    <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 16px 20px;">
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; margin-bottom: 6px;">Waiting on Ops</div>
+      <div class="h" style="font-size: 26px; font-weight: 700;">4</div>
+      <div style="font-size: 12.5px; color: #5a6473;">2 to review, 1 to dispatch, 1 query to route</div>
+    </div>
+    <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 16px 20px;">
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; margin-bottom: 6px;">With KYC vendor</div>
+      <div class="h" style="font-size: 26px; font-weight: 700;">1</div>
+      <div style="font-size: 12.5px; color: #5a6473;">1 vendor query open</div>
+    </div>
+    <div style="flex: 1; background: #ffffff; border: 1px solid #d9b96e; border-radius: 8px; padding: 16px 20px;">
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #b07d1e; margin-bottom: 6px;">Over stage SLA</div>
+      <div class="h" style="font-size: 26px; font-weight: 700; color: #b07d1e;">1</div>
+      <div style="font-size: 12.5px; color: #5a6473;">Pacific Rim Securities, 9 d · 1 approaching</div>
+    </div>
+    <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 16px 20px;">
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; margin-bottom: 6px;">Median time to onboard</div>
+      <div class="h" style="font-size: 26px; font-weight: 700;">32 d</div>
+      <div style="font-size: 12.5px; color: #2e7d4f;">▼ 6 d vs last quarter</div>
+    </div>
+  </div>
+
+  <div style="margin: 20px 40px 32px; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; overflow: hidden;">
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr>
+        <th>Member</th><th>Stage</th><th>Waiting on</th><th>In stage</th><th>Open items</th><th style="text-align: right;">Action</th>
+      </tr>
+      <tr>
+        <td><div style="font-weight: 600;">Pacific Rim Securities</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-037</div></td>
+        <td><span class="mono" style="font-size: 11px; background: #eef1f6; color: #37404f; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">OPS REVIEW</span></td>
+        <td>Operations</td>
+        <td><span class="mono" style="font-weight: 500; color: #c0392f;">9 d</span> <span style="font-size: 11.5px; color: #c0392f;">· over SLA</span></td>
+        <td>10 docs to review</td>
+        <td style="text-align: right;"><span style="background: #c0392f; color: #ffffff; font-size: 12.5px; font-weight: 600; padding: 7px 14px; border-radius: 6px;">Review pack</span></td>
+      </tr>
+      <tr>
+        <td><div style="font-weight: 600;">Meridian Trading Pte Ltd</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-041</div></td>
+        <td><span class="mono" style="font-size: 11px; background: #fbeeec; color: #92251d; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">DOCUMENTS</span></td>
+        <td>Member <span style="font-size: 11.5px; color: #8b95a5;">· 1 returned doc</span></td>
+        <td><span class="mono" style="font-weight: 500;">6 d</span></td>
+        <td>1 clarification open</td>
+        <td style="text-align: right;"><span style="border: 1.5px solid #d8d4cc; color: #37404f; font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 6px;">Open</span></td>
+      </tr>
+      <tr>
+        <td><div style="font-weight: 600;">Harbourfront Capital</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-040</div></td>
+        <td><span class="mono" style="font-size: 11px; background: #eef1f6; color: #37404f; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">OPS REVIEW</span></td>
+        <td>Operations</td>
+        <td><span class="mono" style="font-weight: 500;">2 d</span></td>
+        <td>Checklist complete</td>
+        <td style="text-align: right;"><span style="background: #c0392f; color: #ffffff; font-size: 12.5px; font-weight: 600; padding: 7px 14px; border-radius: 6px;">Review pack</span></td>
+      </tr>
+      <tr>
+        <td><div style="font-weight: 600;">Nikko Futures SG</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-036</div></td>
+        <td><span class="mono" style="font-size: 11px; background: #f3eefa; color: #5b3e8f; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">KYC VENDOR</span></td>
+        <td>Vendor <span style="font-size: 11.5px; color: #b07d1e;">· query for member</span></td>
+        <td><span class="mono" style="font-weight: 500; color: #b07d1e;">7 d</span></td>
+        <td>1 vendor query</td>
+        <td style="text-align: right;"><span style="border: 1.5px solid #d8d4cc; color: #37404f; font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 6px;">Route query</span></td>
+      </tr>
+      <tr>
+        <td><div style="font-weight: 600;">Straits Derivatives</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-039</div></td>
+        <td><span class="mono" style="font-size: 11px; background: #eef1f6; color: #37404f; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">READY TO DISPATCH</span></td>
+        <td>Operations</td>
+        <td><span class="mono" style="font-weight: 500;">1 d</span></td>
+        <td>All 10 docs accepted</td>
+        <td style="text-align: right;"><span style="background: #c0392f; color: #ffffff; font-size: 12.5px; font-weight: 600; padding: 7px 14px; border-radius: 6px;">Send to KYC</span></td>
+      </tr>
+      <tr>
+        <td style="border-bottom: none;"><div style="font-weight: 600;">Lion City Brokerage</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-034</div></td>
+        <td style="border-bottom: none;"><span class="mono" style="font-size: 11px; background: #ecf5ef; color: #21603c; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">COMPLIANCE</span></td>
+        <td style="border-bottom: none;">Compliance</td>
+        <td style="border-bottom: none;"><span class="mono" style="font-weight: 500;">3 d</span></td>
+        <td style="border-bottom: none;">KYC cleared</td>
+        <td style="border-bottom: none; text-align: right;"><span style="border: 1.5px solid #d8d4cc; color: #37404f; font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 6px;">View</span></td>
+      </tr>
+    </table>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,1277 @@
+<meta charset="utf-8">
+<title>Exchange Onboarding Prototype</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  body { margin: 0; background: #e9e7e2; color: #1a2332; overflow: hidden;
+         font-family: "IBM Plex Sans", -apple-system, sans-serif; }
+  .h { font-family: "Schibsted Grotesk", sans-serif; }
+  .mono { font-family: "IBM Plex Mono", monospace; }
+  td { padding: 13px 16px; border-bottom: 1px solid #eeece7; font-size: 13.5px; vertical-align: middle; }
+  th { padding: 9px 16px; text-align: left; font-family: "IBM Plex Mono", monospace; font-weight: 500; font-size: 11px; letter-spacing: 0.09em; text-transform: uppercase; color: #8b95a5; border-bottom: 1px solid #d8d4cc; }
+  .seg { height: 10px; border-radius: 3px; }
+  .lbl { font-size: 12px; font-weight: 600; color: #37404f; margin-bottom: 5px; }
+  .inp { border: 1px solid #d8d4cc; border-radius: 6px; background: #ffffff; padding: 9px 12px; font-size: 13.5px; }
+  .ph { color: #a7ada2; }
+  .kv { display: flex; justify-content: space-between; gap: 16px; font-size: 13px; padding: 6px 0; }
+  .kv .k { color: #8b95a5; }
+  .kv .v { font-weight: 500; text-align: right; }
+  .docrow { display: flex; align-items: center; gap: 9px; font-size: 12.5px; padding: 4px 0; }
+  a { color: #c0392f; }
+
+  .app { display: flex; height: 100vh; }
+  .side { width: 250px; flex-shrink: 0; background: #1a2332; color: #ffffff;
+          display: flex; flex-direction: column; padding: 20px 0 14px; overflow-y: auto; }
+  .side .brand { padding: 0 20px 14px; border-bottom: 1px solid #2b3444; }
+  .side .brand .t { font-family: "Schibsted Grotesk", sans-serif; font-weight: 700; font-size: 15px; }
+  .side .brand .s { font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 0.12em;
+                    text-transform: uppercase; color: #8b95a5; margin-top: 3px; }
+  .grouplabel { font-family: "IBM Plex Mono", monospace; font-size: 10px; letter-spacing: 0.12em;
+                text-transform: uppercase; color: #6c7686; padding: 16px 20px 6px; }
+  .navitem { display: flex; gap: 10px; align-items: flex-start; padding: 8px 20px; cursor: pointer; }
+  .navitem:hover { background: #232d3e; }
+  .navitem.active { background: #2b3444; box-shadow: inset 3px 0 0 #e0685c; }
+  .navitem .n { font-family: "IBM Plex Mono", monospace; font-size: 11px; color: #e0685c; padding-top: 2px; width: 14px; }
+  .navitem b { display: block; font-size: 13px; font-weight: 600; }
+  .navitem i { display: block; font-style: normal; font-size: 11px; color: #8b95a5; margin-top: 1px; }
+  .side .hint { margin-top: auto; padding: 14px 20px 0; font-size: 11.5px; color: #8b95a5; line-height: 1.5;
+                border-top: 1px solid #2b3444; }
+
+  .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .topbar { display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 22px; }
+  .topbar .crumb { font-size: 13.5px; color: #5a6473; }
+  .topbar .crumb b { color: #1a2332; font-weight: 600; }
+  .topbar .btns { display: flex; gap: 8px; }
+  .navbtn { border: 1px solid #d5d1c9; background: #ffffff; border-radius: 6px; padding: 6px 14px;
+            font: inherit; font-size: 13px; font-weight: 600; color: #37404f; cursor: pointer; }
+  .navbtn:hover { border-color: #b8b2a7; }
+  .navbtn:focus-visible, .navitem:focus-visible { outline: 2px solid #c0392f; outline-offset: 2px; }
+
+  .stage { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 0 22px 18px; }
+  .frame { border-radius: 10px; overflow: hidden; border: 1px solid #d5d1c9; flex-shrink: 0;
+           box-shadow: 0 14px 36px rgba(26,35,50,0.13); background: #f4f3f0; }
+  .screen { width: 1440px; height: 900px; transform-origin: top left; display: none; }
+  .screen.on { display: block; }
+
+  .proto-link { cursor: pointer; position: relative; }
+  .proto-link:hover { outline: 2px solid rgba(192,57,47,0.55); outline-offset: 2px; border-radius: 6px; }
+</style>
+<div class="app">
+  <div class="side">
+    <div class="brand">
+      <div class="t">Exchange · Member Onboarding</div>
+      <div class="s">Clickable prototype · v1</div>
+    </div>
+    <div class="grouplabel">Member journey</div>
+<div class="navitem" data-target="create-app"><span class="n">1</span><span><b>Create & invite</b><i>Service Mgmt · day 0</i></span></div><div class="navitem" data-target="app-form"><span class="n">2</span><span><b>Application form</b><i>Member · day 1</i></span></div><div class="navitem" data-target="doc-upload"><span class="n">3</span><span><b>Supporting documents</b><i>Member · day 1</i></span></div><div class="navitem" data-target="review-submit"><span class="n">4</span><span><b>Review & submit</b><i>Member · day 2</i></span></div><div class="navitem" data-target="member-status"><span class="n">5</span><span><b>Status & clarifications</b><i>Member · day 6</i></span></div>
+    <div class="grouplabel">Inside the exchange</div>
+<div class="navitem" data-target="ops-queue"><span class="n">6</span><span><b>Queue</b><i>Operations</i></span></div><div class="navitem" data-target="ops-detail"><span class="n">7</span><span><b>Application detail</b><i>Operations</i></span></div><div class="navitem" data-target="compliance-review"><span class="n">8</span><span><b>Review & decision</b><i>Compliance</i></span></div><div class="navitem" data-target="provisioning"><span class="n">9</span><span><b>Provisioning</b><i>Technology</i></span></div><div class="navitem" data-target="member-live"><span class="n">10</span><span><b>Live on the exchange</b><i>Member · day 28</i></span></div><div class="navitem" data-target="pipeline"><span class="n">11</span><span><b>Pipeline & metrics</b><i>Service Mgmt</i></span></div>
+    <div class="hint">Anything that glows on hover is wired to the real flow — click it. Use ← → keys or the Back / Next buttons to step through the walkthrough.</div>
+  </div>
+  <div class="main">
+    <div class="topbar">
+      <div class="crumb" id="crumb"></div>
+      <div class="btns">
+        <button class="navbtn" id="prev" type="button">← Back</button>
+        <button class="navbtn" id="next" type="button">Next →</button>
+      </div>
+    </div>
+    <div class="stage"><div class="frame" id="frame">
+<div class="screen" id="screen-create-app"><div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Service Management</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; font-size: 13.5px;">
+      <span style="color: #8b95a5;">Pipeline</span>
+      <span style="color: #ffffff; font-weight: 600; border-bottom: 2px solid #e0685c; padding-bottom: 2px;">New application</span>
+      <span style="color: #8b95a5;">Metrics</span>
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">SM</div>
+    </div>
+  </div>
+
+  <div style="padding: 30px 40px 0; flex-shrink: 0;">
+    <h1 class="h" style="margin: 0 0 4px; font-size: 24px; font-weight: 700;">New membership application</h1>
+    <p style="margin: 0; font-size: 14px; color: #5a6473;">Create the application and invite the member's contact. The time-to-onboard clock starts the moment the invitation is sent.</p>
+  </div>
+
+  <div style="display: flex; gap: 24px; padding: 22px 40px 32px; flex: 1; min-height: 0;">
+
+    <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 26px 30px; min-width: 0; display: flex; flex-direction: column; gap: 22px;">
+      <div>
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Applicant</div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px;">
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Legal entity name</div><div class="inp">Meridian Trading Pte Ltd</div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Country of incorporation</div><div class="inp" style="display: flex; justify-content: space-between; align-items: center;">Singapore <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#8b95a5" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Membership class applied for</div><div class="inp" style="display: flex; justify-content: space-between; align-items: center;">Securities trading member <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#8b95a5" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Sponsor (Service Management)</div><div class="inp" style="background: #f6f5f2; color: #5a6473;">A. Lim — assigned automatically</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Member contact to invite</div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px;">
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Full name</div><div class="inp">Tan Wei Ling</div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Work email</div><div class="inp">weiling.tan@meridian.sg</div></div>
+        </div>
+        <div style="margin-top: 12px; font-size: 12.5px; color: #5a6473; line-height: 1.5;">The invitation email contains a secure link to the member portal. The contact can add colleagues from their firm once inside.</div>
+      </div>
+
+      <div style="background: #f6f5f2; border-radius: 7px; padding: 14px 18px;">
+        <div class="h" style="font-size: 13.5px; font-weight: 700; margin-bottom: 6px;">This application will require</div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.6;">The in-portal membership application form, plus 9 supporting documents (certificate of incorporation, constitution, board resolution, shareholding chart, audited financials, directors list, signatory list, regulatory licence, AML/CFT policy). One standard checklist applies to all membership classes.</div>
+      </div>
+    </div>
+
+    <div style="width: 380px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px;">
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 22px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">What happens when you send</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px; color: #37404f;">
+          <div style="display: flex; gap: 10px;"><span class="mono" style="color: #c0392f; font-size: 12px;">1</span><span>Application <span class="mono" style="font-size: 12px;">MEM-2026-041</span> is created in stage <b style="font-weight: 600;">Invited</b></span></div>
+          <div style="display: flex; gap: 10px;"><span class="mono" style="color: #c0392f; font-size: 12px;">2</span><span>The member contact receives the portal invitation</span></div>
+          <div style="display: flex; gap: 10px;"><span class="mono" style="color: #c0392f; font-size: 12px;">3</span><span>The time-to-onboard clock starts, visible on the pipeline</span></div>
+        </div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 18px 22px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 6px;">No documents yet</div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.55;">Service Management doesn't collect anything — the member submits directly, and Operations takes it from there. You'll follow progress on the pipeline.</div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: auto;">
+        <div style="flex: 1; text-align: center; border: 1.5px solid #d8d4cc; color: #37404f; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">Cancel</div>
+        <div style="flex: 1.6; text-align: center; background: #c0392f; color: #ffffff; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">Send invitation →</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="screen-app-form"><div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Member portal</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: #c3cad6;">
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #ffffff;">MT</div>
+      <span>Meridian Trading Pte Ltd</span>
+    </div>
+  </div>
+
+  <div style="padding: 24px 40px 0; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; background: #c0392f; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">1</div>
+        <span style="font-size: 13.5px; font-weight: 600;">Application form</span>
+      </div>
+      <div style="width: 40px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #c3cad6; color: #8b95a5; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; box-sizing: border-box;">2</div>
+        <span style="font-size: 13.5px; color: #8b95a5;">Supporting documents</span>
+      </div>
+      <div style="width: 40px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #c3cad6; color: #8b95a5; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; box-sizing: border-box;">3</div>
+        <span style="font-size: 13.5px; color: #8b95a5;">Review &amp; submit</span>
+      </div>
+    </div>
+    <h1 class="h" style="margin: 0 0 4px; font-size: 24px; font-weight: 700;">Membership application form</h1>
+    <p style="margin: 0 0 4px; font-size: 14px; color: #5a6473;">Filled directly in the portal — no PDF to download and re-upload. Your answers save automatically as a draft.</p>
+  </div>
+
+  <div style="display: flex; gap: 24px; padding: 18px 40px 28px; flex: 1; min-height: 0;">
+
+    <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 24px 28px; min-width: 0; display: flex; flex-direction: column; gap: 18px;">
+
+      <div>
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Company details</div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px;">
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Legal entity name</div><div class="inp">Meridian Trading Pte Ltd</div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">UEN / registration number</div><div class="inp">202412345K</div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Country of incorporation</div><div class="inp" style="display: flex; justify-content: space-between; align-items: center;">Singapore <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#8b95a5" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Date of incorporation</div><div class="inp">14 Mar 2024</div></div>
+          <div style="display: flex; flex-direction: column; grid-column: span 2;"><div class="lbl">Registered address</div><div class="inp ph">e.g. 12 Marina Boulevard, #21-01, Singapore 018982</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Membership applied for</div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px;">
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Membership class</div><div class="inp" style="display: flex; justify-content: space-between; align-items: center;">Securities trading member <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#8b95a5" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Regulated by</div><div class="inp" style="display: flex; justify-content: space-between; align-items: center;">MAS — Capital Markets Services licence <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#8b95a5" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+          <div style="display: flex; flex-direction: column; grid-column: span 2;"><div class="lbl">Licence number</div><div class="inp ph">e.g. CMS100XXX</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Primary contact for this application</div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 18px;">
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Full name</div><div class="inp">Tan Wei Ling</div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Email</div><div class="inp">weiling.tan@meridian.sg</div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Phone</div><div class="inp ph">+65 …</div></div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; align-items: flex-start; background: #f6f5f2; border-radius: 7px; padding: 12px 16px;">
+        <div style="width: 18px; height: 18px; border: 1.5px solid #8b95a5; border-radius: 4px; flex-shrink: 0; margin-top: 1px;"></div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.5;">I declare that the information provided in this application is true and complete, and that I am authorised to submit it on behalf of the applicant entity.</div>
+      </div>
+    </div>
+
+    <div style="width: 360px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px;">
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 22px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">Form progress</div>
+        <div style="display: flex; flex-direction: column; gap: 9px; font-size: 13px;">
+          <div style="display: flex; align-items: center; gap: 9px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Company details</div>
+          <div style="display: flex; align-items: center; gap: 9px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Membership applied for</div>
+          <div style="display: flex; align-items: center; gap: 9px; color: #b07d1e;"><div style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid #b07d1e; box-sizing: border-box;"></div>Primary contact — 1 field left</div>
+          <div style="display: flex; align-items: center; gap: 9px; color: #8b95a5;"><div style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box;"></div>Declaration</div>
+        </div>
+        <div style="margin-top: 14px; font-size: 12px; color: #8b95a5;">Draft saved automatically · last saved just now</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 18px 22px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 6px;">What happens next</div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.55;">Step 2 asks for your supporting documents (certificates, financials, policies). You can move between steps freely — nothing is sent to the exchange until you submit at step 3.</div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: auto;">
+        <div style="flex: 1; text-align: center; border: 1.5px solid #d8d4cc; color: #37404f; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">Save draft</div>
+        <div style="flex: 1.4; text-align: center; background: #c0392f; color: #ffffff; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">Continue to documents →</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="screen-doc-upload"><div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Member portal</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: #c3cad6;">
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #ffffff;">MT</div>
+      <span>Meridian Trading Pte Ltd</span>
+    </div>
+  </div>
+
+  <div style="padding: 24px 40px 0; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; background: #2e7d4f; color: #ffffff; display: flex; align-items: center; justify-content: center;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span style="font-size: 13.5px; color: #2e7d4f; font-weight: 600;">Application form</span>
+      </div>
+      <div style="width: 40px; height: 1.5px; background: #2e7d4f;"></div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; background: #c0392f; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">2</div>
+        <span style="font-size: 13.5px; font-weight: 600;">Supporting documents</span>
+      </div>
+      <div style="width: 40px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #c3cad6; color: #8b95a5; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; box-sizing: border-box;">3</div>
+        <span style="font-size: 13.5px; color: #8b95a5;">Review &amp; submit</span>
+      </div>
+    </div>
+    <div style="display: flex; align-items: flex-end; justify-content: space-between;">
+      <div>
+        <h1 class="h" style="margin: 0 0 4px; font-size: 24px; font-weight: 700;">Supporting documents</h1>
+        <p style="margin: 0; font-size: 14px; color: #5a6473;">Upload each document in the format shown. Files are checked at upload, so a wrong format is caught immediately — not days later by email.</p>
+      </div>
+      <div style="width: 220px;">
+        <div style="display: flex; justify-content: space-between; font-size: 12px; color: #5a6473; margin-bottom: 5px;"><span>Uploaded</span><span class="mono" style="font-weight: 500; color: #1a2332;">3 of 9</span></div>
+        <div style="height: 8px; background: #e4e1db; border-radius: 4px; overflow: hidden;"><div style="width: 33%; height: 100%; background: #2e7d4f;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 24px; padding: 18px 40px 28px; flex: 1; min-height: 0;">
+
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 9px; min-width: 0;">
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 12px 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: #2e7d4f; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14px; font-weight: 600;">Certificate of Incorporation</div>
+          <div style="font-size: 12.5px; color: #5a6473;">acra-certificate.pdf · 640 KB · uploaded today</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <div style="border: 1.5px solid #d8d4cc; color: #37404f; font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: 6px;">Replace</div>
+          <div style="color: #8b95a5; font-size: 12.5px; font-weight: 600; padding: 6px 6px;">Remove</div>
+        </div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 12px 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: #2e7d4f; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14px; font-weight: 600;">Company Constitution</div>
+          <div style="font-size: 12.5px; color: #5a6473;">constitution-2024.pdf · 1.1 MB · uploaded today</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <div style="border: 1.5px solid #d8d4cc; color: #37404f; font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: 6px;">Replace</div>
+          <div style="color: #8b95a5; font-size: 12.5px; font-weight: 600; padding: 6px 6px;">Remove</div>
+        </div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 12px 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: #2e7d4f; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14px; font-weight: 600;">Board Resolution</div>
+          <div style="font-size: 12.5px; color: #5a6473;">board-resolution.pdf · 320 KB · uploaded today</div>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <div style="border: 1.5px solid #d8d4cc; color: #37404f; font-size: 12.5px; font-weight: 600; padding: 6px 13px; border-radius: 6px;">Replace</div>
+          <div style="color: #8b95a5; font-size: 12.5px; font-weight: 600; padding: 6px 6px;">Remove</div>
+        </div>
+      </div>
+
+      <div style="background: #fdf3f2; border: 1.5px dashed #d98079; border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; gap: 14px;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0;"><path d="M10 13V4M6 7.5 10 3.5l4 4M3.5 16.5h13" stroke="#c0392f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14px; font-weight: 600; color: #92251d;">Audited Financial Statements <span style="font-weight: 400; color: #b3564e;">— uploading… 68%</span></div>
+          <div style="margin-top: 6px; height: 6px; background: #f2d4d1; border-radius: 3px; overflow: hidden; max-width: 420px;"><div style="width: 68%; height: 100%; background: #c0392f;"></div></div>
+        </div>
+        <div class="mono" style="font-size: 11.5px; color: #b3564e;">fy2024-audited.pdf</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box; flex-shrink: 0;"></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14px; font-weight: 600;">Shareholding &amp; Group Structure Chart</div>
+          <div style="font-size: 12.5px; color: #5a6473;">Ownership up to ultimate beneficial owners, with percentages. <b style="font-weight: 600; color: #37404f;">PDF, PNG or JPG</b> · max 20 MB</div>
+        </div>
+        <div style="border: 1.5px solid #c0392f; color: #c0392f; font-size: 12.5px; font-weight: 600; padding: 7px 15px; border-radius: 6px; display: flex; align-items: center; gap: 7px;"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 10V3M3.8 6 7 2.8 10.2 6M2.5 11.5h9" stroke="#c0392f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Upload</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box; flex-shrink: 0;"></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14px; font-weight: 600;">Directors &amp; Key Officers List</div>
+          <div style="font-size: 12.5px; color: #5a6473;">All directors and key management with nationality and NRIC/passport numbers. <b style="font-weight: 600; color: #37404f;">PDF or XLSX</b></div>
+        </div>
+        <div style="border: 1.5px solid #c0392f; color: #c0392f; font-size: 12.5px; font-weight: 600; padding: 7px 15px; border-radius: 6px; display: flex; align-items: center; gap: 7px;"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 10V3M3.8 6 7 2.8 10.2 6M2.5 11.5h9" stroke="#c0392f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Upload</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box; flex-shrink: 0;"></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14px; font-weight: 600;">Authorised Signatory List</div>
+          <div style="font-size: 12.5px; color: #5a6473;">Persons authorised to sign and liaise with the exchange, with specimen signatures. <b style="font-weight: 600; color: #37404f;">PDF or XLSX</b></div>
+        </div>
+        <div style="border: 1.5px solid #c0392f; color: #c0392f; font-size: 12.5px; font-weight: 600; padding: 7px 15px; border-radius: 6px; display: flex; align-items: center; gap: 7px;"><svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M7 10V3M3.8 6 7 2.8 10.2 6M2.5 11.5h9" stroke="#c0392f" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Upload</div>
+      </div>
+
+      <div style="font-size: 12.5px; color: #8b95a5; padding: 2px 4px;">+ 2 more · Regulatory Licence (PDF), AML/CFT Policy (PDF or DOCX)</div>
+    </div>
+
+    <div style="width: 360px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px;">
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 22px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">Before you submit</div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.55;">Common reasons documents get returned — a 30-second check now saves a round-trip later:</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px; font-size: 12.5px; color: #37404f;">
+          <div style="display: flex; gap: 9px;"><span style="color: #c0392f;">—</span><span>Financial statements must be <b style="font-weight: 600;">signed</b> audited versions</span></div>
+          <div style="display: flex; gap: 9px;"><span style="color: #c0392f;">—</span><span>Structure chart shows <b style="font-weight: 600;">percentages at every level</b></span></div>
+          <div style="display: flex; gap: 9px;"><span style="color: #c0392f;">—</span><span>Licence copy is <b style="font-weight: 600;">current</b>, not the application letter</span></div>
+        </div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 18px 22px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 6px;">Nothing sent yet</div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.55;">Uploads stay in your draft until you submit at step 3. You can replace or remove any file until then.</div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: auto;">
+        <div style="flex: 1; text-align: center; border: 1.5px solid #d8d4cc; color: #37404f; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">← Back to form</div>
+        <div style="flex: 1.4; text-align: center; background: #b8b2a7; color: #ffffff; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">Review &amp; submit</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="screen-review-submit"><div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Member portal</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: #c3cad6;">
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #ffffff;">MT</div>
+      <span>Meridian Trading Pte Ltd</span>
+    </div>
+  </div>
+
+  <div style="padding: 24px 40px 0; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; background: #2e7d4f; color: #ffffff; display: flex; align-items: center; justify-content: center;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span style="font-size: 13.5px; color: #2e7d4f; font-weight: 600;">Application form</span>
+      </div>
+      <div style="width: 40px; height: 1.5px; background: #2e7d4f;"></div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; background: #2e7d4f; color: #ffffff; display: flex; align-items: center; justify-content: center;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span style="font-size: 13.5px; color: #2e7d4f; font-weight: 600;">Supporting documents</span>
+      </div>
+      <div style="width: 40px; height: 1.5px; background: #2e7d4f;"></div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; background: #c0392f; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">3</div>
+        <span style="font-size: 13.5px; font-weight: 600;">Review &amp; submit</span>
+      </div>
+    </div>
+    <h1 class="h" style="margin: 0 0 4px; font-size: 24px; font-weight: 700;">Review &amp; submit</h1>
+    <p style="margin: 0; font-size: 14px; color: #5a6473;">Check everything once — after submission, changes happen only through clarifications from Operations.</p>
+  </div>
+
+  <div style="display: flex; gap: 24px; padding: 18px 40px 28px; flex: 1; min-height: 0;">
+
+    <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 22px 26px; min-width: 0;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+        <div class="h" style="font-size: 15px; font-weight: 700;">Application form</div>
+        <div style="font-size: 12.5px; font-weight: 600; color: #c0392f;">Edit</div>
+      </div>
+      <div class="kv"><span class="k">Legal entity name</span><span class="v">Meridian Trading Pte Ltd</span></div>
+      <div class="kv"><span class="k">UEN</span><span class="v mono" style="font-weight: 400;">202412345K</span></div>
+      <div class="kv"><span class="k">Incorporated</span><span class="v">Singapore · 14 Mar 2024</span></div>
+      <div class="kv"><span class="k">Membership class</span><span class="v">Securities trading member</span></div>
+      <div class="kv"><span class="k">Licence</span><span class="v">MAS CMS · <span class="mono" style="font-weight: 400;">CMS100482</span></span></div>
+      <div class="kv" style="border-bottom: 1px solid #eeece7; padding-bottom: 12px;"><span class="k">Primary contact</span><span class="v">Tan Wei Ling · weiling.tan@meridian.sg</span></div>
+      <div style="display: flex; gap: 12px; align-items: flex-start; margin-top: 14px;">
+        <div style="width: 18px; height: 18px; border-radius: 4px; background: #2e7d4f; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.5;">Declaration signed by Tan Wei Ling — the information provided is true and complete, and she is authorised to submit on behalf of the applicant entity.</div>
+      </div>
+    </div>
+
+    <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 22px 26px; min-width: 0;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+        <div class="h" style="font-size: 15px; font-weight: 700;">Supporting documents</div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="mono" style="font-size: 11.5px; color: #2e7d4f;">9 of 9</div>
+          <div style="font-size: 12.5px; font-weight: 600; color: #c0392f;">Edit</div>
+        </div>
+      </div>
+      <div class="docrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Certificate of Incorporation <span class="mono" style="color: #8b95a5; margin-left: auto;">acra-certificate.pdf</span></div>
+      <div class="docrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Company Constitution <span class="mono" style="color: #8b95a5; margin-left: auto;">constitution-2024.pdf</span></div>
+      <div class="docrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Board Resolution <span class="mono" style="color: #8b95a5; margin-left: auto;">board-resolution.pdf</span></div>
+      <div class="docrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Shareholding &amp; Group Structure Chart <span class="mono" style="color: #8b95a5; margin-left: auto;">structure-chart.pdf</span></div>
+      <div class="docrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Audited Financial Statements <span class="mono" style="color: #8b95a5; margin-left: auto;">fy2024-audited.pdf</span></div>
+      <div class="docrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Directors &amp; Key Officers List <span class="mono" style="color: #8b95a5; margin-left: auto;">directors-list.xlsx</span></div>
+      <div class="docrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Authorised Signatory List <span class="mono" style="color: #8b95a5; margin-left: auto;">signatories.pdf</span></div>
+      <div class="docrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Regulatory Licence (MAS CMS) <span class="mono" style="color: #8b95a5; margin-left: auto;">cms-licence.pdf</span></div>
+      <div class="docrow"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>AML/CFT Policy <span class="mono" style="color: #8b95a5; margin-left: auto;">aml-cft-policy.pdf</span></div>
+    </div>
+
+    <div style="width: 360px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px;">
+      <div style="background: #ecf5ef; border: 1px solid #bcd9c6; border-radius: 8px; padding: 18px 22px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; color: #21603c; margin-bottom: 6px;">Everything is complete</div>
+        <div style="font-size: 12.5px; color: #35573f; line-height: 1.55;">Form filled and declared · 9 of 9 documents uploaded in the accepted formats. Submitting hands the pack to Operations and moves your application to <b style="font-weight: 600;">Ops review</b>.</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 18px 22px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 6px;">After you submit</div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.55;">You'll track progress on a live timeline. If anything needs fixing, Operations returns the specific document with a reason — you'll never be asked to resend the whole pack.</div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: auto;">
+        <div style="flex: 1; text-align: center; border: 1.5px solid #d8d4cc; color: #37404f; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">← Back to documents</div>
+        <div style="flex: 1.4; text-align: center; background: #c0392f; color: #ffffff; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">Submit application</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="screen-member-status"><div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px; letter-spacing: -0.01em;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Member portal</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: #c3cad6;">
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #ffffff;">MT</div>
+      <span>Meridian Trading Pte Ltd</span>
+    </div>
+  </div>
+
+  <div style="padding: 28px 40px 0; flex-shrink: 0;">
+    <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 24px;">
+      <div>
+        <h1 class="h" style="margin: 0 0 4px; font-size: 24px; font-weight: 700; letter-spacing: -0.01em;">Document checklist</h1>
+        <p style="margin: 0; font-size: 14px; color: #5a6473;">Provide each document below, then submit the pack for Operations review.</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <div style="width: 220px;">
+          <div style="display: flex; justify-content: space-between; font-size: 12px; color: #5a6473; margin-bottom: 5px;"><span>Progress</span><span class="mono" style="font-weight: 500; color: #1a2332;">9 of 10</span></div>
+          <div style="height: 8px; background: #e4e1db; border-radius: 4px; overflow: hidden;"><div style="width: 90%; height: 100%; background: #2e7d4f;"></div></div>
+        </div>
+        <div style="background: #b8b2a7; color: #ffffff; font-size: 14px; font-weight: 600; padding: 11px 22px; border-radius: 7px; white-space: nowrap;">Submit for review</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 24px; padding: 22px 40px 32px; flex: 1; min-height: 0;">
+
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0;">
+
+      <div style="background: #fdf6ec; border: 1px solid #e8d5ae; border-radius: 8px; padding: 12px 16px; display: flex; gap: 12px; align-items: flex-start;">
+        <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 1px;"><circle cx="10" cy="10" r="8" stroke="#b07d1e" stroke-width="1.6"/><path d="M10 6v4.5" stroke="#b07d1e" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="13.6" r="1" fill="#b07d1e"/></svg>
+        <div style="font-size: 13.5px; color: #6e5417; line-height: 1.5;"><b style="font-weight: 600;">1 document returned.</b> Operations returned your Audited Financial Statements — see the reason below and re-upload. Everything else stays accepted.</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: #2e7d4f; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14.5px; font-weight: 600;">Membership Application Form</div>
+          <div style="font-size: 12.5px; color: #5a6473;">Filled in the portal · accepted by Operations · view responses</div>
+        </div>
+        <div class="mono" style="font-size: 11px; color: #2e7d4f; background: #ecf5ef; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.06em;">ACCEPTED</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: #2e7d4f; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14.5px; font-weight: 600;">Certificate of Incorporation</div>
+          <div style="font-size: 12.5px; color: #5a6473;">Accepted by Operations · acra-certificate.pdf</div>
+        </div>
+        <div class="mono" style="font-size: 11px; color: #2e7d4f; background: #ecf5ef; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.06em;">ACCEPTED</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #d9b96e; border-radius: 8px; padding: 15px 18px; display: flex; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: #b07d1e; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 2.5v4M2 9.5c2.6-1.4 5.4-1.4 8 0" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="font-size: 14.5px; font-weight: 600;">Audited Financial Statements</div>
+            <div class="mono" style="font-size: 11px; color: #b07d1e; background: #fdf6ec; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.06em;">RETURNED</div>
+          </div>
+          <div style="font-size: 12.5px; color: #5a6473; margin-top: 2px;">Audited statements for the last two financial years. Accepted format: PDF · max 20 MB.</div>
+          <div style="margin-top: 8px; background: #fdf6ec; border-radius: 6px; padding: 8px 12px; font-size: 12.5px; color: #6e5417; line-height: 1.45;"><b style="font-weight: 600;">Reason (Ops, yesterday):</b> The FY2024 statement is unsigned. Please upload the signed audited version.</div>
+        </div>
+        <div style="align-self: center; background: #c0392f; color: #ffffff; font-size: 13px; font-weight: 600; padding: 9px 16px; border-radius: 6px; white-space: nowrap;">Re-upload</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: #2e7d4f; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14.5px; font-weight: 600;">Board Resolution</div>
+          <div style="font-size: 12.5px; color: #5a6473;">Accepted by Operations · board-resolution.pdf</div>
+        </div>
+        <div class="mono" style="font-size: 11px; color: #2e7d4f; background: #ecf5ef; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.06em;">ACCEPTED</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: #2e7d4f; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14.5px; font-weight: 600;">Regulatory Licence</div>
+          <div style="font-size: 12.5px; color: #5a6473;">Accepted by Operations · cms-licence.pdf</div>
+        </div>
+        <div class="mono" style="font-size: 11px; color: #2e7d4f; background: #ecf5ef; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.06em;">ACCEPTED</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 13px 18px; display: flex; align-items: center; gap: 14px;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: #2e7d4f; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="flex: 1; min-width: 0;">
+          <div style="font-size: 14.5px; font-weight: 600;">AML/CFT Policy</div>
+          <div style="font-size: 12.5px; color: #5a6473;">Accepted by Operations · aml-cft-policy.pdf</div>
+        </div>
+        <div class="mono" style="font-size: 11px; color: #2e7d4f; background: #ecf5ef; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.06em;">ACCEPTED</div>
+      </div>
+
+      <div style="font-size: 12.5px; color: #8b95a5; padding: 2px 4px;">+ 4 more accepted documents · Shareholding Structure Chart, Authorised Signatory List, Company Constitution, Directors &amp; Key Officers List</div>
+    </div>
+
+    <div style="width: 400px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px;">
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 22px;">
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 4px;">Where you are</div>
+        <div style="font-size: 12.5px; color: #5a6473; margin-bottom: 16px;">Application <span class="mono">MEM-2026-041</span> · started 21 Aug</div>
+
+        <div style="display: flex; flex-direction: column;">
+          <div style="display: flex; gap: 12px;">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 20px;"><div style="width: 10px; height: 10px; border-radius: 50%; background: #2e7d4f; margin-top: 4px;"></div><div style="width: 2px; flex: 1; background: #2e7d4f;"></div></div>
+            <div style="padding-bottom: 16px;"><div style="font-size: 13.5px; font-weight: 600;">Invited</div><div style="font-size: 12px; color: #8b95a5;">21 Aug · Service Management</div></div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 20px;"><div style="width: 14px; height: 14px; border-radius: 50%; background: #ffffff; border: 4px solid #c0392f; box-sizing: border-box; margin-top: 3px;"></div><div style="width: 2px; flex: 1; background: #e4e1db;"></div></div>
+            <div style="padding-bottom: 16px;">
+              <div style="font-size: 13.5px; font-weight: 600;">Documents in progress</div>
+              <div style="font-size: 12px; color: #8b95a5;">Day 6 in this stage</div>
+              <div style="margin-top: 6px; background: #fbeeec; color: #92251d; font-size: 12px; font-weight: 500; padding: 5px 10px; border-radius: 5px; display: inline-block;">You hold the next action — 1 re-upload</div>
+            </div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 20px;"><div style="width: 10px; height: 10px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box; margin-top: 4px;"></div><div style="width: 2px; flex: 1; background: #e4e1db;"></div></div>
+            <div style="padding-bottom: 16px;"><div style="font-size: 13.5px; color: #5a6473;">Ops review</div><div style="font-size: 12px; color: #b3bac4;">Operations</div></div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 20px;"><div style="width: 10px; height: 10px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box; margin-top: 4px;"></div><div style="width: 2px; flex: 1; background: #e4e1db;"></div></div>
+            <div style="padding-bottom: 16px;"><div style="font-size: 13.5px; color: #5a6473;">KYC vendor</div><div style="font-size: 12px; color: #b3bac4;">KYC vendor</div></div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 20px;"><div style="width: 10px; height: 10px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box; margin-top: 4px;"></div><div style="width: 2px; flex: 1; background: #e4e1db;"></div></div>
+            <div style="padding-bottom: 16px;"><div style="font-size: 13.5px; color: #5a6473;">Compliance review</div><div style="font-size: 12px; color: #b3bac4;">Compliance</div></div>
+          </div>
+          <div style="display: flex; gap: 12px;">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 20px;"><div style="width: 10px; height: 10px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box; margin-top: 4px;"></div></div>
+            <div><div style="font-size: 13.5px; color: #5a6473;">Provisioning &amp; go-live</div><div style="font-size: 12px; color: #b3bac4;">Technology</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 18px 22px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <div class="h" style="font-size: 15px; font-weight: 700;">Clarifications</div>
+          <div class="mono" style="font-size: 11px; background: #fbeeec; color: #92251d; padding: 3px 8px; border-radius: 10px;">1 open</div>
+        </div>
+        <div style="font-size: 13px; line-height: 1.5; color: #1a2332;"><b style="font-weight: 600;">Ops · Audited Financial Statements</b><br>“The FY2024 statement is unsigned — please upload the signed audited version.”</div>
+        <div style="margin-top: 10px; font-size: 13px; font-weight: 600; color: #c0392f;">Reply or re-upload →</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="screen-ops-queue"><div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Operations</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; font-size: 13.5px;">
+      <span style="color: #ffffff; font-weight: 600; border-bottom: 2px solid #e0685c; padding-bottom: 2px;">Queue</span>
+      <span style="color: #8b95a5;">Pipeline</span>
+      <span style="color: #8b95a5;">Metrics</span>
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">OP</div>
+    </div>
+  </div>
+
+  <div style="padding: 28px 40px 0; flex-shrink: 0;">
+    <h1 class="h" style="margin: 0 0 4px; font-size: 24px; font-weight: 700;">Operations queue</h1>
+    <p style="margin: 0; font-size: 14px; color: #5a6473;">Ordered by time waiting on Operations — longest wait first.</p>
+  </div>
+
+  <div style="display: flex; gap: 16px; padding: 20px 40px 0; flex-shrink: 0;">
+    <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 16px 20px;">
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; margin-bottom: 6px;">Waiting on Ops</div>
+      <div class="h" style="font-size: 26px; font-weight: 700;">4</div>
+      <div style="font-size: 12.5px; color: #5a6473;">2 to review, 1 to dispatch, 1 query to route</div>
+    </div>
+    <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 16px 20px;">
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; margin-bottom: 6px;">With KYC vendor</div>
+      <div class="h" style="font-size: 26px; font-weight: 700;">1</div>
+      <div style="font-size: 12.5px; color: #5a6473;">1 vendor query open</div>
+    </div>
+    <div style="flex: 1; background: #ffffff; border: 1px solid #d9b96e; border-radius: 8px; padding: 16px 20px;">
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #b07d1e; margin-bottom: 6px;">Over stage SLA</div>
+      <div class="h" style="font-size: 26px; font-weight: 700; color: #b07d1e;">1</div>
+      <div style="font-size: 12.5px; color: #5a6473;">Pacific Rim Securities, 9 d · 1 approaching</div>
+    </div>
+    <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 16px 20px;">
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; margin-bottom: 6px;">Median time to onboard</div>
+      <div class="h" style="font-size: 26px; font-weight: 700;">32 d</div>
+      <div style="font-size: 12.5px; color: #2e7d4f;">▼ 6 d vs last quarter</div>
+    </div>
+  </div>
+
+  <div style="margin: 20px 40px 32px; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; overflow: hidden;">
+    <table style="width: 100%; border-collapse: collapse;">
+      <tr>
+        <th>Member</th><th>Stage</th><th>Waiting on</th><th>In stage</th><th>Open items</th><th style="text-align: right;">Action</th>
+      </tr>
+      <tr>
+        <td><div style="font-weight: 600;">Pacific Rim Securities</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-037</div></td>
+        <td><span class="mono" style="font-size: 11px; background: #eef1f6; color: #37404f; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">OPS REVIEW</span></td>
+        <td>Operations</td>
+        <td><span class="mono" style="font-weight: 500; color: #c0392f;">9 d</span> <span style="font-size: 11.5px; color: #c0392f;">· over SLA</span></td>
+        <td>10 docs to review</td>
+        <td style="text-align: right;"><span style="background: #c0392f; color: #ffffff; font-size: 12.5px; font-weight: 600; padding: 7px 14px; border-radius: 6px;">Review pack</span></td>
+      </tr>
+      <tr>
+        <td><div style="font-weight: 600;">Meridian Trading Pte Ltd</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-041</div></td>
+        <td><span class="mono" style="font-size: 11px; background: #fbeeec; color: #92251d; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">DOCUMENTS</span></td>
+        <td>Member <span style="font-size: 11.5px; color: #8b95a5;">· 1 returned doc</span></td>
+        <td><span class="mono" style="font-weight: 500;">6 d</span></td>
+        <td>1 clarification open</td>
+        <td style="text-align: right;"><span style="border: 1.5px solid #d8d4cc; color: #37404f; font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 6px;">Open</span></td>
+      </tr>
+      <tr>
+        <td><div style="font-weight: 600;">Harbourfront Capital</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-040</div></td>
+        <td><span class="mono" style="font-size: 11px; background: #eef1f6; color: #37404f; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">OPS REVIEW</span></td>
+        <td>Operations</td>
+        <td><span class="mono" style="font-weight: 500;">2 d</span></td>
+        <td>Checklist complete</td>
+        <td style="text-align: right;"><span style="background: #c0392f; color: #ffffff; font-size: 12.5px; font-weight: 600; padding: 7px 14px; border-radius: 6px;">Review pack</span></td>
+      </tr>
+      <tr>
+        <td><div style="font-weight: 600;">Nikko Futures SG</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-036</div></td>
+        <td><span class="mono" style="font-size: 11px; background: #f3eefa; color: #5b3e8f; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">KYC VENDOR</span></td>
+        <td>Vendor <span style="font-size: 11.5px; color: #b07d1e;">· query for member</span></td>
+        <td><span class="mono" style="font-weight: 500; color: #b07d1e;">7 d</span></td>
+        <td>1 vendor query</td>
+        <td style="text-align: right;"><span style="border: 1.5px solid #d8d4cc; color: #37404f; font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 6px;">Route query</span></td>
+      </tr>
+      <tr>
+        <td><div style="font-weight: 600;">Straits Derivatives</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-039</div></td>
+        <td><span class="mono" style="font-size: 11px; background: #eef1f6; color: #37404f; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">READY TO DISPATCH</span></td>
+        <td>Operations</td>
+        <td><span class="mono" style="font-weight: 500;">1 d</span></td>
+        <td>All 10 docs accepted</td>
+        <td style="text-align: right;"><span style="background: #c0392f; color: #ffffff; font-size: 12.5px; font-weight: 600; padding: 7px 14px; border-radius: 6px;">Send to KYC</span></td>
+      </tr>
+      <tr>
+        <td style="border-bottom: none;"><div style="font-weight: 600;">Lion City Brokerage</div><div class="mono" style="font-size: 11.5px; color: #8b95a5;">MEM-2026-034</div></td>
+        <td style="border-bottom: none;"><span class="mono" style="font-size: 11px; background: #ecf5ef; color: #21603c; padding: 4px 9px; border-radius: 4px; letter-spacing: 0.05em;">COMPLIANCE</span></td>
+        <td style="border-bottom: none;">Compliance</td>
+        <td style="border-bottom: none;"><span class="mono" style="font-weight: 500;">3 d</span></td>
+        <td style="border-bottom: none;">KYC cleared</td>
+        <td style="border-bottom: none; text-align: right;"><span style="border: 1.5px solid #d8d4cc; color: #37404f; font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 6px;">View</span></td>
+      </tr>
+    </table>
+  </div>
+</div></div>
+<div class="screen" id="screen-ops-detail"><div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Operations</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; font-size: 13.5px;">
+      <span style="color: #ffffff; font-weight: 600; border-bottom: 2px solid #e0685c; padding-bottom: 2px;">Queue</span>
+      <span style="color: #8b95a5;">Pipeline</span>
+      <span style="color: #8b95a5;">Metrics</span>
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">OP</div>
+    </div>
+  </div>
+
+  <div style="padding: 24px 40px 18px; background: #ffffff; border-bottom: 1px solid #e4e1db; flex-shrink: 0;">
+    <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 24px;">
+      <div>
+        <div class="mono" style="font-size: 12px; color: #8b95a5; margin-bottom: 3px;">← Queue &nbsp;/&nbsp; MEM-2026-036</div>
+        <h1 class="h" style="margin: 0; font-size: 22px; font-weight: 700;">Nikko Futures SG</h1>
+        <div style="font-size: 13px; color: #5a6473; margin-top: 3px;">Derivatives trading member · Sponsor: A. Lim (Service Mgmt) · Started 4 Aug · Day 23</div>
+      </div>
+      <div style="display: flex; gap: 10px;">
+        <div style="border: 1.5px solid #d8d4cc; color: #37404f; font-size: 13px; font-weight: 600; padding: 9px 16px; border-radius: 6px;">Raise clarification</div>
+        <div style="background: #b8b2a7; color: #ffffff; font-size: 13px; font-weight: 600; padding: 9px 16px; border-radius: 6px;">Record vendor result</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px; margin-top: 18px;">
+      <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Documents · 8 d</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Ops review · 3 d</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 7px; background: #1a2332; border-radius: 14px; padding: 5px 13px;"><div style="width: 7px; height: 7px; border-radius: 50%; background: #e0685c;"></div><span style="font-size: 12px; font-weight: 600; color: #ffffff;">KYC vendor · day 7</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="border-radius: 14px; padding: 5px 13px; border: 1px dashed #c3cad6;"><span style="font-size: 12px; color: #8b95a5;">Compliance</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="border-radius: 14px; padding: 5px 13px; border: 1px dashed #c3cad6;"><span style="font-size: 12px; color: #8b95a5;">Provisioning</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="border-radius: 14px; padding: 5px 13px; border: 1px dashed #c3cad6;"><span style="font-size: 12px; color: #8b95a5;">Live</span></div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 24px; padding: 22px 40px 32px; flex: 1; min-height: 0;">
+
+    <div style="flex: 1.15; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 24px; min-width: 0; display: flex; flex-direction: column;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+        <div class="h" style="font-size: 15px; font-weight: 700;">Document pack</div>
+        <div class="mono" style="font-size: 11.5px; color: #2e7d4f;">10 of 10 accepted · dispatched to vendor 20 Aug</div>
+      </div>
+      <div style="display: flex; flex-direction: column;">
+        <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #eeece7;">
+          <svg width="15" height="15" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="flex: 1; font-size: 13.5px; font-weight: 500;">Membership Application Form</div>
+          <div class="mono" style="font-size: 11.5px; color: #8b95a5;">Portal form · view responses</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #eeece7;">
+          <svg width="15" height="15" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="flex: 1; font-size: 13.5px; font-weight: 500;">Certificate of Incorporation</div>
+          <div class="mono" style="font-size: 11.5px; color: #8b95a5;">PDF · 640 KB</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #eeece7;">
+          <svg width="15" height="15" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="flex: 1; font-size: 13.5px; font-weight: 500;">Audited Financial Statements</div>
+          <div style="font-size: 11.5px; color: #8b95a5;">2 returns before accept</div>
+          <div class="mono" style="font-size: 11.5px; color: #8b95a5;">PDF · 4.8 MB</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #eeece7;">
+          <svg width="15" height="15" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="flex: 1; font-size: 13.5px; font-weight: 500;">Shareholding &amp; Group Structure Chart</div>
+          <div class="mono" style="font-size: 11.5px; color: #8b95a5;">PDF · 890 KB</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #eeece7;">
+          <svg width="15" height="15" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="flex: 1; font-size: 13.5px; font-weight: 500;">Directors &amp; Key Officers List</div>
+          <div class="mono" style="font-size: 11.5px; color: #8b95a5;">XLSX · 96 KB</div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; padding: 10px 0;">
+          <svg width="15" height="15" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div style="flex: 1; font-size: 13.5px; font-weight: 500;">Regulatory Licence (MAS CMS)</div>
+          <div class="mono" style="font-size: 11.5px; color: #8b95a5;">PDF · 310 KB</div>
+        </div>
+        <div style="font-size: 12.5px; color: #8b95a5; padding-top: 10px;">+ 4 more accepted documents</div>
+      </div>
+    </div>
+
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 24px; flex: 1; display: flex; flex-direction: column; min-height: 0;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;">
+          <div class="h" style="font-size: 15px; font-weight: 700;">Clarifications</div>
+          <div class="mono" style="font-size: 11px; background: #fbeeec; color: #92251d; padding: 3px 8px; border-radius: 10px;">1 to route</div>
+        </div>
+
+        <div style="border: 1px solid #d9b96e; background: #fdf9f1; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <div class="mono" style="font-size: 10.5px; letter-spacing: 0.08em; background: #f3eefa; color: #5b3e8f; padding: 2px 8px; border-radius: 4px;">FROM KYC VENDOR</div>
+            <div style="font-size: 11.5px; color: #8b95a5;">Received by Ops · today 09:42</div>
+          </div>
+          <div style="font-size: 13px; line-height: 1.5;">“Beneficial owner listed at 22% in the structure chart does not appear in the registry extract. Please confirm current shareholding or provide an updated chart.”</div>
+          <div style="display: flex; gap: 8px; margin-top: 12px;">
+            <div style="background: #c0392f; color: #ffffff; font-size: 12.5px; font-weight: 600; padding: 7px 14px; border-radius: 6px;">Route to member</div>
+            <div style="border: 1.5px solid #d8d4cc; color: #37404f; font-size: 12.5px; font-weight: 600; padding: 6px 14px; border-radius: 6px;">Edit before sending</div>
+          </div>
+        </div>
+
+        <div style="border: 1px solid #e4e1db; border-radius: 8px; padding: 14px 16px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+            <div class="mono" style="font-size: 10.5px; letter-spacing: 0.08em; background: #eef1f6; color: #37404f; padding: 2px 8px; border-radius: 4px;">OPS → MEMBER</div>
+            <div style="font-size: 11.5px; color: #8b95a5;">Audited Financial Statements · resolved 18 Aug</div>
+          </div>
+          <div style="font-size: 13px; line-height: 1.5; color: #5a6473;">“FY2024 statement unsigned — please upload the signed audited version.” <b style="color: #2e7d4f; font-weight: 600;">Resolved by re-upload.</b></div>
+        </div>
+
+        <div style="font-size: 12.5px; color: #8b95a5;">3 resolved clarifications · view history</div>
+      </div>
+
+      <div style="background: #f7f2ea; border: 1px solid #e4dcc9; border-radius: 8px; padding: 14px 18px; display: flex; gap: 12px; align-items: flex-start;">
+        <svg width="17" height="17" viewBox="0 0 20 20" fill="none" style="flex-shrink: 0; margin-top: 1px;"><path d="M10 3 3 6.5v3c0 4 2.8 6.6 7 7.5 4.2-.9 7-3.5 7-7.5v-3L10 3Z" stroke="#8a6d2f" stroke-width="1.5" stroke-linejoin="round"/></svg>
+        <div style="font-size: 12.5px; color: #6e5417; line-height: 1.5;"><b style="font-weight: 600;">Ops is the single channel.</b> The vendor and Compliance never contact the member directly — their queries arrive here, and you route them. Every hop is timestamped on the timeline.</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="screen-compliance-review"><div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Compliance</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; font-size: 13.5px;">
+      <span style="color: #ffffff; font-weight: 600; border-bottom: 2px solid #e0685c; padding-bottom: 2px;">Review queue</span>
+      <span style="color: #8b95a5;">Decisions</span>
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">CM</div>
+    </div>
+  </div>
+
+  <div style="padding: 20px 40px 14px; background: #ffffff; border-bottom: 1px solid #e4e1db; flex-shrink: 0;">
+    <div class="mono" style="font-size: 12px; color: #8b95a5; margin-bottom: 3px;">← Review queue &nbsp;/&nbsp; MEM-2026-034</div>
+    <div style="display: flex; align-items: flex-end; justify-content: space-between;">
+      <div>
+        <h1 class="h" style="margin: 0; font-size: 22px; font-weight: 700;">Lion City Brokerage — compliance review</h1>
+        <div style="font-size: 13px; color: #5a6473; margin-top: 3px;">Securities trading member · In compliance review for 3 days · Application day 26</div>
+      </div>
+      <div class="mono" style="font-size: 11px; background: #ecf5ef; color: #21603c; padding: 5px 12px; border-radius: 4px; letter-spacing: 0.06em;">KYC CLEARED</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px; margin-top: 14px;">
+      <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Documents · 12 d</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Ops review · 4 d</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">KYC vendor · 6 d</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 7px; background: #1a2332; border-radius: 14px; padding: 5px 13px;"><div style="width: 7px; height: 7px; border-radius: 50%; background: #e0685c;"></div><span style="font-size: 12px; font-weight: 600; color: #ffffff;">Compliance · day 3</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="border-radius: 14px; padding: 5px 13px; border: 1px dashed #c3cad6;"><span style="font-size: 12px; color: #8b95a5;">Provisioning</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="border-radius: 14px; padding: 5px 13px; border: 1px dashed #c3cad6;"><span style="font-size: 12px; color: #8b95a5;">Live</span></div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 24px; padding: 8px 40px 32px; flex: 1; min-height: 0;">
+
+    <div style="flex: 1.2; display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 24px;">
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">KYC vendor result <span class="mono" style="font-weight: 400; font-size: 11.5px; color: #8b95a5; margin-left: 6px;">recorded by Operations · 24 Aug</span></div>
+        <div style="display: flex; gap: 24px;">
+          <div><div class="mono" style="font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: #8b95a5; margin-bottom: 3px;">Outcome</div><div style="font-size: 14px; font-weight: 600; color: #2e7d4f;">Cleared</div></div>
+          <div><div class="mono" style="font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: #8b95a5; margin-bottom: 3px;">Vendor ref</div><div class="mono" style="font-size: 13px;">KV-88213</div></div>
+          <div><div class="mono" style="font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: #8b95a5; margin-bottom: 3px;">Screening turnaround</div><div style="font-size: 13.5px;">6 days</div></div>
+          <div><div class="mono" style="font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: #8b95a5; margin-bottom: 3px;">Queries raised</div><div style="font-size: 13.5px;">1, resolved via Ops</div></div>
+        </div>
+        <div style="margin-top: 12px; background: #f6f5f2; border-radius: 6px; padding: 10px 14px; font-size: 12.5px; color: #5a6473; line-height: 1.5;">Vendor note: “No adverse media or sanctions matches. Beneficial ownership verified against updated structure chart received 22 Aug.”</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 24px; flex: 1; min-height: 0;">
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Document pack <span class="mono" style="font-weight: 400; font-size: 11.5px; color: #2e7d4f; margin-left: 6px;">10 of 10 accepted by Ops</span></div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px;">
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Membership Application Form</div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Directors &amp; Key Officers List</div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Certificate of Incorporation</div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Authorised Signatory List</div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Company Constitution</div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Regulatory Licence (MAS CMS)</div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Board Resolution</div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>AML/CFT Policy</div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Audited Financial Statements</div>
+          <div style="display: flex; align-items: center; gap: 10px; font-size: 13px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Shareholding &amp; Group Structure Chart</div>
+        </div>
+        <div style="margin-top: 14px; font-size: 12.5px; color: #8b95a5;">Query history: 4 clarifications over the application, all resolved · view thread</div>
+      </div>
+    </div>
+
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 22px 24px;">
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 4px;">Decision</div>
+        <div style="font-size: 12.5px; color: #5a6473; margin-bottom: 14px;">Recorded with your name and timestamp; approval automatically opens the Technology provisioning task.</div>
+        <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+          <div style="display: flex; align-items: center; gap: 10px; border: 1.5px solid #2e7d4f; background: #ecf5ef; border-radius: 7px; padding: 11px 14px;">
+            <div style="width: 15px; height: 15px; border-radius: 50%; border: 5px solid #2e7d4f; box-sizing: border-box; background: #ffffff;"></div>
+            <div style="font-size: 13.5px; font-weight: 600; color: #21603c;">Approve membership</div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; border: 1px solid #e4e1db; border-radius: 7px; padding: 11px 14px;">
+            <div style="width: 15px; height: 15px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box;"></div>
+            <div style="font-size: 13.5px; color: #5a6473;">Reject with documented reason</div>
+          </div>
+        </div>
+        <div class="mono" style="font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: #8b95a5; margin-bottom: 5px;">Rationale (required)</div>
+        <div style="border: 1px solid #d8d4cc; border-radius: 7px; padding: 11px 14px; font-size: 13px; color: #5a6473; min-height: 74px; line-height: 1.5;">KYC cleared with beneficial ownership verified. Financials meet the base capital requirement for securities trading membership. No open queries.</div>
+        <div style="display: flex; gap: 10px; margin-top: 16px;">
+          <div style="flex: 1; background: #2e7d4f; color: #ffffff; text-align: center; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">Record decision</div>
+        </div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 18px 24px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 4px;">Need more from the member?</div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.5; margin-bottom: 12px;">Compliance does not contact the member directly. Your request goes to the Operations queue, and Ops routes it onward — the answer comes back to this page.</div>
+        <div style="display: inline-block; border: 1.5px solid #c0392f; color: #c0392f; font-size: 12.5px; font-weight: 600; padding: 8px 15px; border-radius: 6px;">Request information via Ops</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="screen-provisioning"><div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Technology</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; font-size: 13.5px;">
+      <span style="color: #ffffff; font-weight: 600; border-bottom: 2px solid #e0685c; padding-bottom: 2px;">Provisioning tasks</span>
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">TE</div>
+    </div>
+  </div>
+
+  <div style="padding: 20px 40px 14px; background: #ffffff; border-bottom: 1px solid #e4e1db; flex-shrink: 0;">
+    <div class="mono" style="font-size: 12px; color: #8b95a5; margin-bottom: 3px;">← Provisioning tasks &nbsp;/&nbsp; MEM-2026-034</div>
+    <div style="display: flex; align-items: flex-end; justify-content: space-between;">
+      <div>
+        <h1 class="h" style="margin: 0; font-size: 22px; font-weight: 700;">Lion City Brokerage — provisioning</h1>
+        <div style="font-size: 13px; color: #5a6473; margin-top: 3px;">Securities trading member · Approved by Compliance · Task opened automatically on approval</div>
+      </div>
+      <div class="mono" style="font-size: 11px; background: #ecf5ef; color: #21603c; padding: 5px 12px; border-radius: 4px; letter-spacing: 0.06em;">APPROVED</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 6px; margin-top: 14px;">
+      <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Documents · 12 d</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Ops review · 4 d</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">KYC vendor · 6 d</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Compliance · 4 d</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 7px; background: #1a2332; border-radius: 14px; padding: 5px 13px;"><div style="width: 7px; height: 7px; border-radius: 50%; background: #e0685c;"></div><span style="font-size: 12px; font-weight: 600; color: #ffffff;">Provisioning · day 1</span></div>
+      <div style="width: 18px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="border-radius: 14px; padding: 5px 13px; border: 1px dashed #c3cad6;"><span style="font-size: 12px; color: #8b95a5;">Live</span></div>
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 24px; padding: 22px 40px 32px; flex: 1; min-height: 0;">
+
+    <div style="flex: 1.2; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 22px 26px; min-width: 0;">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+        <div class="h" style="font-size: 15px; font-weight: 700;">Provisioning checklist</div>
+        <div class="mono" style="font-size: 11.5px; color: #5a6473;">1 of 4 complete</div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px solid #eeece7;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; background: #2e7d4f; display: flex; align-items: center; justify-content: center; flex-shrink: 0;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div style="flex: 1;">
+          <div style="font-size: 14px; font-weight: 600;">Trading connectivity</div>
+          <div style="font-size: 12.5px; color: #5a6473;">FIX session configured and conformance-tested · completed today, 10:20</div>
+        </div>
+        <div class="mono" style="font-size: 11px; color: #2e7d4f; background: #ecf5ef; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.06em;">DONE</div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px solid #eeece7;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; border: 3px solid #b07d1e; box-sizing: border-box; flex-shrink: 0;"></div>
+        <div style="flex: 1;">
+          <div style="font-size: 14px; font-weight: 600;">Member account &amp; user setup</div>
+          <div style="font-size: 12.5px; color: #5a6473;">Trading and settlement accounts, user credentials for the member's named users</div>
+        </div>
+        <div class="mono" style="font-size: 11px; color: #b07d1e; background: #fdf6ec; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.06em;">IN PROGRESS</div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px solid #eeece7;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box; flex-shrink: 0;"></div>
+        <div style="flex: 1;">
+          <div style="font-size: 14px; font-weight: 600;">Market data entitlements</div>
+          <div style="font-size: 12.5px; color: #5a6473;">Entitle the member's data subscriptions for the securities market</div>
+        </div>
+        <div class="mono" style="font-size: 11px; color: #8b95a5; background: #f1f0ed; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.06em;">PENDING</div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px; padding: 13px 0;">
+        <div style="width: 22px; height: 22px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box; flex-shrink: 0;"></div>
+        <div style="flex: 1;">
+          <div style="font-size: 14px; font-weight: 600;">Production readiness check</div>
+          <div style="font-size: 12.5px; color: #5a6473;">Final end-to-end check with the member before go-live</div>
+        </div>
+        <div class="mono" style="font-size: 11px; color: #8b95a5; background: #f1f0ed; padding: 3px 9px; border-radius: 4px; letter-spacing: 0.06em;">PENDING</div>
+      </div>
+    </div>
+
+    <div style="flex: 1; display: flex; flex-direction: column; gap: 16px; min-width: 0;">
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 24px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">Compliance decision</div>
+        <div style="font-size: 13px; line-height: 1.55; color: #37404f;"><b style="font-weight: 600; color: #21603c;">Approved</b> · recorded 27 Aug by C. Menon (Compliance)</div>
+        <div style="margin-top: 8px; background: #f6f5f2; border-radius: 6px; padding: 10px 14px; font-size: 12.5px; color: #5a6473; line-height: 1.5;">“KYC cleared with beneficial ownership verified. Financials meet the base capital requirement for securities trading membership. No open queries.”</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 24px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 6px;">Going live</div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.55;">Marking the member live completes onboarding: the time-to-onboard clock stops, the member and every internal team are notified, and the application's per-stage timings feed the metrics view.</div>
+        <div style="margin-top: 14px; text-align: center; background: #b8b2a7; color: #ffffff; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">Mark member live</div>
+        <div style="margin-top: 8px; font-size: 12px; color: #8b95a5; text-align: center;">Enabled when all 4 checklist items are complete</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="screen-member-live"><div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Member portal</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: #c3cad6;">
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #ffffff;">LC</div>
+      <span>Lion City Brokerage</span>
+    </div>
+  </div>
+
+  <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 32px 40px;">
+    <div style="width: 880px;">
+
+      <div style="text-align: center; margin-bottom: 28px;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: #2e7d4f; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;"><svg width="30" height="30" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#ffffff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h1 class="h" style="margin: 0 0 6px; font-size: 30px; font-weight: 700;">You're live on the exchange</h1>
+        <p style="margin: 0; font-size: 15px; color: #5a6473;">Lion City Brokerage is now a securities trading member. Onboarded in <b style="font-weight: 600; color: #1a2332;">28 days</b>, invitation to go-live.</p>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 22px 28px; margin-bottom: 16px;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Invited · 1 Aug</span></div>
+          <div style="width: 16px; height: 1.5px; background: #bcd9c6;"></div>
+          <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Documents · 12 d</span></div>
+          <div style="width: 16px; height: 1.5px; background: #bcd9c6;"></div>
+          <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Ops review · 4 d</span></div>
+          <div style="width: 16px; height: 1.5px; background: #bcd9c6;"></div>
+          <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">KYC · 6 d</span></div>
+          <div style="width: 16px; height: 1.5px; background: #bcd9c6;"></div>
+          <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Compliance · 4 d</span></div>
+          <div style="width: 16px; height: 1.5px; background: #bcd9c6;"></div>
+          <div style="display: flex; align-items: center; gap: 7px; background: #ecf5ef; border-radius: 14px; padding: 5px 13px;"><svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size: 12px; font-weight: 500; color: #21603c;">Provisioning · 2 d</span></div>
+          <div style="width: 16px; height: 1.5px; background: #bcd9c6;"></div>
+          <div style="display: flex; align-items: center; gap: 7px; background: #2e7d4f; border-radius: 14px; padding: 5px 13px;"><span style="font-size: 12px; font-weight: 600; color: #ffffff;">Live · 29 Aug</span></div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 16px;">
+        <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 24px;">
+          <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">Your access</div>
+          <div style="font-size: 12.5px; color: #5a6473; line-height: 1.6;">Trading connectivity is active and your named users have credentials. Connection details and entitlements were sent to your primary contact.</div>
+        </div>
+        <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 24px;">
+          <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">Your documents</div>
+          <div style="font-size: 12.5px; color: #5a6473; line-height: 1.6;">The submitted pack and the full application history stay available here for your records — including every clarification and its resolution.</div>
+        </div>
+        <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 24px;">
+          <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 8px;">Who to contact</div>
+          <div style="font-size: 12.5px; color: #5a6473; line-height: 1.6;">Day-to-day matters now go to Member Services. Your onboarding sponsor A. Lim remains your relationship contact.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div></div>
+<div class="screen" id="screen-pipeline"><div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Service Management</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 22px; font-size: 13.5px;">
+      <span style="color: #ffffff; font-weight: 600; border-bottom: 2px solid #e0685c; padding-bottom: 2px;">Pipeline</span>
+      <span style="color: #8b95a5;">New application</span>
+      <span style="color: #8b95a5;">Metrics</span>
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">SM</div>
+    </div>
+  </div>
+
+  <div style="padding: 28px 40px 0; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: space-between;">
+    <div>
+      <h1 class="h" style="margin: 0 0 4px; font-size: 24px; font-weight: 700;">Onboarding pipeline</h1>
+      <p style="margin: 0; font-size: 14px; color: #5a6473;">Every in-flight application, where it sits, and where time is going.</p>
+    </div>
+    <div style="display: flex; gap: 28px;">
+      <div style="text-align: right;"><div class="mono" style="font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: #8b95a5;">Median time to onboard</div><div class="h" style="font-size: 22px; font-weight: 700;">32 d <span style="font-size: 13px; color: #2e7d4f; font-weight: 600;">▼ 6</span></div></div>
+      <div style="text-align: right;"><div class="mono" style="font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: #8b95a5;">First-time-right docs</div><div class="h" style="font-size: 22px; font-weight: 700;">78%</div></div>
+      <div style="text-align: right;"><div class="mono" style="font-size: 10.5px; letter-spacing: 0.09em; text-transform: uppercase; color: #8b95a5;">Round-trips / application</div><div class="h" style="font-size: 22px; font-weight: 700;">3.4</div></div>
+    </div>
+  </div>
+
+  <div style="margin: 22px 40px 12px; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 24px 8px;">
+    <div style="display: flex; gap: 12px; padding: 0 0 12px; border-bottom: 1px solid #eeece7;">
+      <div style="width: 230px;"></div>
+      <div class="mono" style="flex: 0.8; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: #8b95a5;">Invited</div>
+      <div class="mono" style="flex: 1.4; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: #8b95a5;">Documents</div>
+      <div class="mono" style="flex: 1; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: #8b95a5;">Ops review</div>
+      <div class="mono" style="flex: 1.2; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: #8b95a5;">KYC vendor</div>
+      <div class="mono" style="flex: 1; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: #8b95a5;">Compliance</div>
+      <div class="mono" style="flex: 0.8; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: #8b95a5;">Provisioning</div>
+      <div style="width: 74px;"></div>
+    </div>
+
+    <div style="display: flex; gap: 12px; align-items: center; padding: 13px 0; border-bottom: 1px solid #eeece7;">
+      <div style="width: 230px;"><div style="font-size: 13.5px; font-weight: 600;">Lion City Brokerage</div><div class="mono" style="font-size: 11px; color: #8b95a5;">MEM-2026-034 · day 26</div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1.4;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1.2;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #1a2332; position: relative;"><div style="position: absolute; right: -2px; top: -3px; width: 8px; height: 16px; border-radius: 3px; background: #e0685c;"></div></div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div class="mono" style="width: 74px; font-size: 11.5px; color: #5a6473; text-align: right;">3 d here</div>
+    </div>
+
+    <div style="display: flex; gap: 12px; align-items: center; padding: 13px 0; border-bottom: 1px solid #eeece7;">
+      <div style="width: 230px;"><div style="font-size: 13.5px; font-weight: 600;">Nikko Futures SG</div><div class="mono" style="font-size: 11px; color: #8b95a5;">MEM-2026-036 · day 23</div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1.4;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1.2;"><div class="seg" style="background: #b07d1e; position: relative;"><div style="position: absolute; right: -2px; top: -3px; width: 8px; height: 16px; border-radius: 3px; background: #e0685c;"></div></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div class="mono" style="width: 74px; font-size: 11.5px; color: #b07d1e; text-align: right;">7 d here</div>
+    </div>
+
+    <div style="display: flex; gap: 12px; align-items: center; padding: 13px 0; border-bottom: 1px solid #eeece7; background: #fdf9f1; margin: 0 -24px; padding-left: 24px; padding-right: 24px;">
+      <div style="width: 230px;"><div style="font-size: 13.5px; font-weight: 600;">Pacific Rim Securities <span class="mono" style="font-size: 10px; background: #b07d1e; color: #ffffff; padding: 2px 7px; border-radius: 4px; letter-spacing: 0.06em; margin-left: 4px;">STALLED</span></div><div class="mono" style="font-size: 11px; color: #8b95a5;">MEM-2026-037 · day 21</div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1.4;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #c0392f; position: relative;"><div style="position: absolute; right: -2px; top: -3px; width: 8px; height: 16px; border-radius: 3px; background: #e0685c;"></div></div></div>
+      <div style="flex: 1.2;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div class="mono" style="width: 74px; font-size: 11.5px; color: #c0392f; text-align: right;">9 d here</div>
+    </div>
+
+    <div style="display: flex; gap: 12px; align-items: center; padding: 13px 0; border-bottom: 1px solid #eeece7;">
+      <div style="width: 230px;"><div style="font-size: 13.5px; font-weight: 600;">Straits Derivatives</div><div class="mono" style="font-size: 11px; color: #8b95a5;">MEM-2026-039 · day 12</div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1.4;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #1a2332; position: relative;"><div style="position: absolute; right: -2px; top: -3px; width: 8px; height: 16px; border-radius: 3px; background: #e0685c;"></div></div></div>
+      <div style="flex: 1.2;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div class="mono" style="width: 74px; font-size: 11.5px; color: #5a6473; text-align: right;">1 d here</div>
+    </div>
+
+    <div style="display: flex; gap: 12px; align-items: center; padding: 13px 0; border-bottom: 1px solid #eeece7;">
+      <div style="width: 230px;"><div style="font-size: 13.5px; font-weight: 600;">Harbourfront Capital</div><div class="mono" style="font-size: 11px; color: #8b95a5;">MEM-2026-040 · day 9</div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1.4;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #1a2332; position: relative;"><div style="position: absolute; right: -2px; top: -3px; width: 8px; height: 16px; border-radius: 3px; background: #e0685c;"></div></div></div>
+      <div style="flex: 1.2;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div class="mono" style="width: 74px; font-size: 11.5px; color: #5a6473; text-align: right;">2 d here</div>
+    </div>
+
+    <div style="display: flex; gap: 12px; align-items: center; padding: 13px 0;">
+      <div style="width: 230px;"><div style="font-size: 13.5px; font-weight: 600;">Meridian Trading Pte Ltd</div><div class="mono" style="font-size: 11px; color: #8b95a5;">MEM-2026-041 · day 6</div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #2e7d4f;"></div></div>
+      <div style="flex: 1.4;"><div class="seg" style="background: #1a2332; position: relative;"><div style="position: absolute; right: -2px; top: -3px; width: 8px; height: 16px; border-radius: 3px; background: #e0685c;"></div></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div style="flex: 1.2;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div style="flex: 1;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div style="flex: 0.8;"><div class="seg" style="background: #eeece7;"></div></div>
+      <div class="mono" style="width: 74px; font-size: 11.5px; color: #5a6473; text-align: right;">6 d here</div>
+    </div>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 22px; padding: 0 44px 28px; font-size: 12px; color: #5a6473;">
+    <div style="display: flex; align-items: center; gap: 7px;"><div style="width: 22px; height: 8px; border-radius: 3px; background: #2e7d4f;"></div>Completed stage</div>
+    <div style="display: flex; align-items: center; gap: 7px;"><div style="width: 22px; height: 8px; border-radius: 3px; background: #1a2332;"></div>Current stage</div>
+    <div style="display: flex; align-items: center; gap: 7px;"><div style="width: 22px; height: 8px; border-radius: 3px; background: #b07d1e;"></div>Approaching SLA</div>
+    <div style="display: flex; align-items: center; gap: 7px;"><div style="width: 22px; height: 8px; border-radius: 3px; background: #c0392f;"></div>Over SLA</div>
+    <div style="display: flex; align-items: center; gap: 7px;"><div style="width: 8px; height: 14px; border-radius: 3px; background: #e0685c;"></div>Where the application sits today</div>
+  </div>
+</div></div>
+    </div></div>
+  </div>
+</div>
+<script>
+  var ORDER = ["create-app", "app-form", "doc-upload", "review-submit", "member-status", "ops-queue", "ops-detail", "compliance-review", "provisioning", "member-live", "pipeline"];
+  var CLICKS = {"Send invitation →": "app-form", "Continue to documents →": "doc-upload", "← Back to form": "app-form", "Review & submit": "review-submit", "Supporting documents": "doc-upload", "Submit application": "member-status", "← Back to documents": "doc-upload", "Review pack": "ops-detail", "Open": "ops-detail", "Route query": "ops-detail", "Send to KYC": "ops-detail", "View": "ops-detail", "Queue": "ops-queue", "Pipeline": "pipeline", "New application": "create-app", "Review queue": "compliance-review", "Provisioning tasks": "provisioning", "Record decision": "provisioning", "Request information via Ops": "ops-detail", "Mark member live": "member-live"};
+  var LABELS = {};
+  document.querySelectorAll(".navitem").forEach(function (it) {
+    LABELS[it.dataset.target] = it.querySelector("b").textContent + " — " + it.querySelector("i").textContent;
+    it.setAttribute("tabindex", "0");
+    it.addEventListener("click", function () { show(it.dataset.target); });
+  });
+
+  var current = ORDER[0];
+  function show(id) {
+    current = id;
+    document.querySelectorAll(".screen").forEach(function (s) { s.classList.toggle("on", s.id === "screen-" + id); });
+    document.querySelectorAll(".navitem").forEach(function (it) { it.classList.toggle("active", it.dataset.target === id); });
+    var idx = ORDER.indexOf(id);
+    document.getElementById("crumb").innerHTML = "<b>" + (idx + 1) + " / " + ORDER.length + "</b> &nbsp; " + LABELS[id];
+    fit();
+  }
+  function step(d) {
+    var idx = ORDER.indexOf(current) + d;
+    if (idx >= 0 && idx < ORDER.length) show(ORDER[idx]);
+  }
+  document.getElementById("prev").addEventListener("click", function () { step(-1); });
+  document.getElementById("next").addEventListener("click", function () { step(1); });
+  addEventListener("keydown", function (e) {
+    if (e.key === "ArrowLeft") step(-1);
+    if (e.key === "ArrowRight") step(1);
+  });
+
+  function fit() {
+    var stage = document.querySelector(".stage");
+    var s = Math.min((stage.clientWidth - 50) / 1440, (stage.clientHeight - 22) / 900, 1);
+    var frame = document.getElementById("frame");
+    frame.style.width = (1440 * s) + "px";
+    frame.style.height = (900 * s) + "px";
+    document.querySelectorAll(".screen").forEach(function (sc) { sc.style.transform = "scale(" + s + ")"; });
+  }
+  addEventListener("resize", fit);
+
+  // Wire clicks by exact visible text; innermost matching element wins.
+  var all = document.querySelectorAll(".screen div, .screen span");
+  all.forEach(function (el) {
+    var t = el.textContent.replace(/\s+/g, " ").trim();
+    var target = CLICKS[t];
+    if (!target) return;
+    var inner = false;
+    el.querySelectorAll("div, span").forEach(function (c) {
+      if (c.textContent.replace(/\s+/g, " ").trim() === t) inner = true;
+    });
+    if (inner) return;
+    el.classList.add("proto-link");
+    el.addEventListener("click", function (ev) { ev.stopPropagation(); show(target); });
+  });
+
+  show(current);
+</script>

@@ -1,0 +1,33 @@
+{# The submitted application form, read-only, for internal reviewers. #}
+{% macro form_answers(app, form, sections, open=false) %}
+<details {{ 'open' if open }} style="padding:11px 0;border-bottom:1px solid var(--hair)">
+  <summary style="color:var(--ink);font-weight:500;font-size:13.5px;
+           display:flex;align-items:center;gap:10px">
+    <svg width="15" height="15" viewBox="0 0 12 12" fill="none" style="color:var(--ok)">
+      <path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="currentColor" stroke-width="1.8"
+            stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Membership Application Form
+    <span class="pill ok">FILLED IN PORTAL</span>
+    <span class="small faint" style="font-weight:400">view responses</span>
+  </summary>
+  <div style="padding:4px 0 6px 25px">
+    {% for section in sections %}
+      <div class="mono small faint" style="letter-spacing:.08em;text-transform:uppercase;
+           margin:10px 0 4px">{{ section.name }}</div>
+      {% for f in section.fields %}
+        <div class="row" style="justify-content:space-between;gap:16px;
+             font-size:12.5px;padding:3px 0">
+          <span class="faint">{{ f.label }}</span>
+          <span style="font-weight:500;text-align:right">{{ form.get(f.id) or '—' }}</span>
+        </div>
+      {% endfor %}
+    {% endfor %}
+    <div class="small muted" style="margin-top:10px;padding-top:8px;
+         border-top:1px solid var(--hair)">
+      {% if app.declared %}Declaration signed by
+        {{ form.get('contact_name') or 'the primary contact' }}.
+      {% else %}<span style="color:var(--warn)">Declaration not signed.</span>{% endif %}
+    </div>
+  </div>
+</details>
+{% endmacro %}

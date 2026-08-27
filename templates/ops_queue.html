@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Operations queue{% endblock %}
+{% block body %}
+<div class="pagehead">
+  <div>
+    <h1>Operations queue</h1>
+    <p class="sub">Ordered by time waiting on Operations — longest wait first.</p>
+  </div>
+</div>
+
+<div class="row" style="gap:16px;align-items:stretch;margin-bottom:20px">
+  <div class="card grow">
+    <div class="mono small faint" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Waiting on Ops</div>
+    <div class="h" style="font-size:26px;font-weight:700">{{ tiles.waiting }}</div>
+    <div class="small muted">{{ tiles.to_review }} to review, {{ tiles.to_dispatch }} to dispatch,
+      {{ tiles.to_route }} quer{{ 'y' if tiles.to_route == 1 else 'ies' }} to route</div>
+  </div>
+  <div class="card grow">
+    <div class="mono small faint" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">With KYC vendor</div>
+    <div class="h" style="font-size:26px;font-weight:700">{{ tiles.with_vendor }}</div>
+    <div class="small muted">{{ tiles.to_route }} vendor quer{{ 'y' if tiles.to_route == 1 else 'ies' }} open</div>
+  </div>
+  <div class="card grow" style="{% if tiles.over_sla %}border-color:var(--warn-line){% endif %}">
+    <div class="mono small" style="letter-spacing:.1em;text-transform:uppercase;
+         margin-bottom:6px;color:{{ 'var(--warn)' if tiles.over_sla else 'var(--faint)' }}">Over stage SLA</div>
+    <div class="h" style="font-size:26px;font-weight:700;
+         color:{{ 'var(--warn)' if tiles.over_sla else 'var(--ink)' }}">{{ tiles.over_sla }}</div>
+    <div class="small muted">
+      {%- set worst = rows | selectattr('sla','equalto','over') | list | first -%}
+      {% if worst %}{{ worst.app.member_name }}, {{ worst.days }} d · {% endif %}
+      {{ tiles.approaching }} approaching</div>
+  </div>
+  <div class="card grow">
+    <div class="mono small faint" style="letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px">Median time to onboard</div>
+    <div class="h" style="font-size:26px;font-weight:700">
+      {{ metrics.median_onboard if metrics.median_onboard is not none else '—' }} d</div>
+    <div class="small muted">across {{ metrics.live }} onboarded member{{ 's' if metrics.live != 1 }}</div>
+  </div>
+</div>
+
+<div class="tablecard">
+  <table>
+    <tr><th>Member</th><th>Stage</th><th>Waiting on</th><th>In stage</th>
+        <th>Open items</th><th style="text-align:right">Action</th></tr>
+    {% for r in rows %}
+      <tr {% if r.sla == 'over' %}style="background:#fdf9f1"{% endif %}>
+        <td>
+          <div style="font-weight:600">{{ r.app.member_name }}
+            {% if r.sla == 'over' %}<span class="pill" style="background:var(--warn);
+              color:#fff;margin-left:4px">STALLED</span>{% endif %}</div>
+          <div class="mono small faint">{{ r.app.id }} · day {{ r.day }}</div>
+        </td>
+        <td>{{ m.stage_pill(r.app.stage) }}</td>
+        <td>{{ r.waiting_on }}
+          {% if r.to_route %}<span class="small" style="color:var(--warn)"> · query to route</span>
+          {% elif r.open_clars %}<span class="small faint"> · {{ r.open_clars }} with member</span>{% endif %}</td>
+        <td><span class="mono" style="font-weight:500;
+            color:{{ 'var(--accent)' if r.sla=='over' else ('var(--warn)' if r.sla=='approaching' else 'var(--ink)') }}">{{ r.days }} d</span>
+          {% if r.sla == 'over' %}<span class="small" style="color:var(--accent)"> · over SLA</span>{% endif %}</td>
+        <td class="muted">
+          {% if r.action == 'Review pack' %}{{ r.pending_docs }} doc{{ 's' if r.pending_docs != 1 }} to review
+          {% elif r.action == 'Send to KYC' %}All documents accepted
+          {% elif r.to_route %}{{ r.to_route }} vendor/compliance quer{{ 'y' if r.to_route == 1 else 'ies' }}
+          {% elif r.open_clars %}{{ r.open_clars }} clarification{{ 's' if r.open_clars != 1 }} open
+          {% else %}—{% endif %}</td>
+        <td style="text-align:right">
+          <a class="btn sm {{ 'primary' if r.waiting_on == 'Operations' }}"
+             href="{{ url_for('ops_detail', app_id=r.app.id) }}">{{ r.action }}</a></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6" class="muted" style="text-align:center;padding:28px">
+        Nothing in the queue.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

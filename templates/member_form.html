@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Membership application form · {{ app.member_name }}{% endblock %}
+{% block body %}
+{{ m.steps(1) }}
+<div class="pagehead">
+  <div>
+    <h1>Membership application form</h1>
+    <p class="sub">Filled directly in the portal — no PDF to download and re-upload.
+      Your answers save as a draft.</p>
+  </div>
+  <div class="mono small faint">{{ app.id }}</div>
+</div>
+
+<form method="post" class="cols">
+  <div class="grow card stack" style="gap:22px">
+    {% for section in sections %}
+      <div>
+        <h2 class="sec">{{ section.name }}</h2>
+        <div class="{{ 'grid3' if section.id == 'contact' else 'grid2' }}">
+          {% for f in section.fields %}
+            <div class="{{ 'wide' if f.wide }}">
+              <label class="lbl" for="{{ f.id }}">{{ f.label }}</label>
+              <input type="{{ 'email' if f.id == 'contact_email' else 'text' }}"
+                     id="{{ f.id }}" name="{{ f.id }}"
+                     value="{{ form.get(f.id, '') }}"
+                     placeholder="{{ f.placeholder }}">
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+
+    <label class="row" style="gap:12px;align-items:flex-start;background:#f6f5f2;
+           border-radius:7px;padding:12px 16px;cursor:pointer">
+      <input type="checkbox" name="declared" {{ 'checked' if app.declared }}
+             style="width:18px;height:18px;margin-top:1px;accent-color:var(--ok)">
+      <span class="small muted">{{ declaration }}</span>
+    </label>
+  </div>
+
+  <div class="side stack" style="gap:16px">
+    <div class="card">
+      <h2 class="sec">Form progress</h2>
+      <div class="stack" style="gap:9px;font-size:13px">
+        {% for section in sections %}
+          {% set gaps = section.fields | map(attribute='id')
+                        | select('in', missing) | list %}
+          <div class="row" style="gap:9px">
+            {% if gaps %}
+              <span style="width:11px;height:11px;border-radius:50%;
+                     border:2px solid var(--warn);flex:none"></span>
+              <span style="color:var(--warn)">{{ section.name }} — {{ gaps|length }} field{{ 's' if gaps|length > 1 }} left</span>
+            {% else %}
+              <span style="color:var(--ok);display:flex">{{ m.tick(13) }}</span>
+              <span>{{ section.name }}</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+        <div class="row" style="gap:9px">
+          {% if app.declared %}
+            <span style="color:var(--ok);display:flex">{{ m.tick(13) }}</span><span>Declaration</span>
+          {% else %}
+            <span style="width:11px;height:11px;border-radius:50%;border:2px solid #c3cad6;flex:none"></span>
+            <span class="faint">Declaration</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="sec">What happens next</h2>
+      <p class="small muted" style="margin:0">Step 2 asks for your supporting
+        documents (certificates, financials, policies). You can move between
+        steps freely — nothing is sent to the exchange until you submit at step 3.</p>
+    </div>
+
+    <div class="row" style="gap:10px">
+      <button class="btn grow" type="submit" name="action" value="save">Save draft</button>
+      <button class="btn primary grow" type="submit" name="action" value="continue"
+              style="flex:1.4">Continue to documents →</button>
+    </div>
+  </div>
+</form>
+{% endblock %}

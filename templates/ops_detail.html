@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% import "_formcard.html" as fc %}
+{% block title %}{{ app.member_name }} · Operations{% endblock %}
+{% block body %}
+<div class="card" style="border-radius:8px;margin-bottom:22px">
+  <div class="crumb"><a href="{{ url_for('ops') }}">← Queue</a> &nbsp;/&nbsp; {{ app.id }}</div>
+  <div class="pagehead" style="margin-bottom:14px">
+    <div>
+      <h1 style="font-size:22px">{{ app.member_name }}</h1>
+      <p class="sub small">{{ app.membership_class }} · Sponsor: {{ app.sponsor }} ·
+        Contact: {{ app.contact_name }} ({{ app.contact_email }}) · Day {{ day }}</p>
+    </div>
+    <div class="row" style="gap:10px">
+      {% if app.stage == 'KYC' %}
+        <a class="btn" href="#vendor">Record vendor query or result</a>
+      {% endif %}
+      {% if ready and app.stage == 'OPS_REVIEW' %}
+        <form method="post" action="{{ url_for('dispatch', app_id=app.id) }}">
+          <button class="btn primary" type="submit">Send pack to KYC vendor</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+  {{ m.strip(timeline) }}
+</div>
+
+<div class="cols">
+  <div class="grow card" style="flex:1.15">
+    <div class="row" style="justify-content:space-between;margin-bottom:14px">
+      <h2 class="sec" style="margin:0">Application pack</h2>
+      <span class="mono small" style="color:{{ 'var(--ok)' if ready else 'var(--muted)' }}">
+        {{ docs | selectattr('1.status','equalto','ACCEPTED') | list | length }}
+        of {{ docs|length }} documents accepted
+        {%- if app.kyc_dispatched_at %} · dispatched to vendor{% endif %}</span>
+    </div>
+
+    {{ fc.form_answers(app, form, sections) }}
+
+    {% for doc, row in docs %}
+      <div class="row" style="padding:11px 0;border-bottom:1px solid var(--hair);
+           align-items:flex-start">
+        {% if row.status == 'ACCEPTED' %}
+          <span style="color:var(--ok);display:flex;margin-top:2px">{{ m.tick(15) }}</span>
+        {% elif row.status == 'RETURNED' %}
+          <span style="width:15px;height:15px;border-radius:50%;border:2px solid var(--warn);
+                flex:none;margin-top:2px"></span>
+        {% elif row.status == 'UPLOADED' %}
+          <span style="width:15px;height:15px;border-radius:50%;border:2px solid var(--faint);
+                flex:none;margin-top:2px"></span>
+        {% else %}
+          <span style="width:15px;height:15px;border-radius:50%;border:2px solid #c3cad6;
+                flex:none;margin-top:2px"></span>
+        {% endif %}
+
+        <div class="grow">
+          <div class="row" style="gap:10px">
+            <span style="font-size:13.5px;font-weight:500">{{ doc.name }}</span>
+            {{ m.doc_pill(row) }}
+            {% if row.returns %}<span class="small faint">{{ row.returns }} return{{ 's' if row.returns > 1 }} before accept</span>{% endif %}
+          </div>
+          {% if row.filename %}
+            <div class="mono small faint">{{ row.filename }}</div>
+          {% endif %}
+          {% if row.return_reason and row.status == 'RETURNED' %}
+            <div class="small" style="margin-top:6px;color:#6e5417">
+              Returned: {{ row.return_reason }}</div>
+          {% endif %}
+        </div>
+
+        {% if row.status == 'UPLOADED' %}
+          <div class="row" style="gap:8px">
+            <form method="post" action="{{ url_for('accept_doc', app_id=app.id, doc_id=doc.id) }}">
+              <button class="btn go sm" type="submit">Accept</button>
+            </form>
+            <details>
+              <summary class="btn sm" style="display:inline-flex">Return</summary>
+              <form method="post" action="{{ url_for('return_doc', app_id=app.id, doc_id=doc.id) }}"
+                    class="stack" style="gap:8px;position:absolute;z-index:5;width:420px;
+                    background:var(--card);border:1px solid var(--line);border-radius:8px;
+                    padding:14px;margin-top:8px;box-shadow:0 10px 28px rgba(26,35,50,.14)">
+                <div class="lbl">Reason (goes to the member as a clarification)</div>
+                {% for t in templates %}
+                  <label class="row small" style="gap:8px;align-items:flex-start;cursor:pointer">
+                    <input type="radio" name="template" value="{{ t }}" style="margin-top:3px">
+                    <span>{{ t }}</span></label>
+                {% endfor %}
+                <textarea name="reason" placeholder="…or write your own reason"
+                          style="min-height:56px"></textarea>
+                <button class="btn primary sm" type="submit">Return to member</button>
+              </form>
+            </details>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+
+    {% if app.kyc_result %}
+      <div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line)">
+        <h2 class="sec">KYC vendor result</h2>
+        <div class="row" style="gap:24px">
+          <div><div class="mono small faint">OUTCOME</div>
+            <div style="font-weight:600;color:{{ 'var(--ok)' if app.kyc_result == 'CLEARED' else 'var(--warn)' }}">
+              {{ app.kyc_result|capitalize }}</div></div>
+          <div><div class="mono small faint">VENDOR REF</div>
+            <div class="mono small">{{ app.kyc_vendor_ref or '—' }}</div></div>
+        </div>
+        {% if app.kyc_note %}
+          <div class="small muted" style="margin-top:10px;background:#f6f5f2;
+               border-radius:6px;padding:10px 14px">{{ app.kyc_note }}</div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="grow stack" style="gap:16px">
+    <div class="card">
+      <div class="row" style="justify-content:space-between;margin-bottom:14px">
+        <h2 class="sec" style="margin:0">Clarifications</h2>
+        {% if to_route %}<span class="pill bad" style="border-radius:10px">{{ to_route|length }} to route</span>
+        {% elif open_clars %}<span class="pill warn" style="border-radius:10px">{{ open_clars|length }} with member</span>
+        {% else %}<span class="pill grey" style="border-radius:10px">none open</span>{% endif %}
+      </div>
+
+      {% for c in to_route %}
+        <div style="border:1px solid var(--warn-line);background:#fdf9f1;
+             border-radius:8px;padding:14px 16px;margin-bottom:12px">
+          <div class="row" style="gap:8px;margin-bottom:6px">
+            <span class="pill {{ 'violet' if c.origin == 'VENDOR' else 'ok' }}">
+              FROM {{ 'KYC VENDOR' if c.origin == 'VENDOR' else 'COMPLIANCE' }}</span>
+            <span class="small faint">received by Ops</span>
+          </div>
+          <div class="small" style="line-height:1.5">“{{ c.text }}”</div>
+          <form method="post" action="{{ url_for('route_query', clar_id=c.id) }}"
+                class="stack" style="gap:8px;margin-top:12px">
+            <input type="hidden" name="app_id" value="{{ app.id }}">
+            <details><summary>Edit before sending</summary>
+              <textarea name="text" style="min-height:60px">{{ c.text }}</textarea>
+            </details>
+            <button class="btn primary sm" type="submit"
+                    style="align-self:flex-start">Route to member</button>
+          </form>
+        </div>
+      {% endfor %}
+
+      {% for c in open_clars %}
+        <div style="border:1px solid var(--line);border-radius:8px;padding:14px 16px;
+             margin-bottom:12px">
+          <div class="row" style="gap:8px;margin-bottom:6px">
+            <span class="pill neutral">OPS → MEMBER</span>
+            {% if c.doc_id %}<span class="small faint">{{ docs_by_id[c.doc_id].name }}</span>{% endif %}
+          </div>
+          <div class="small" style="line-height:1.5">“{{ c.text }}”</div>
+          <div class="small faint" style="margin-top:6px">Waiting on the member.</div>
+        </div>
+      {% endfor %}
+
+      {% if resolved %}
+        <details>
+          <summary>{{ resolved|length }} resolved</summary>
+          <div class="stack" style="gap:10px">
+            {% for c in resolved %}
+              <div class="small muted" style="line-height:1.45">
+                <b>{{ c.origin|capitalize }}{% if c.doc_id %} · {{ docs_by_id[c.doc_id].name }}{% endif %}</b> —
+                “{{ c.text }}”
+                <span style="color:var(--ok);font-weight:600">{{ c.answer }}</span></div>
+            {% endfor %}
+          </div>
+        </details>
+      {% endif %}
+
+      {% if not to_route and not open_clars and not resolved %}
+        <p class="small muted" style="margin:0">No clarifications raised yet.</p>
+      {% endif %}
+    </div>
+
+    {% if app.stage == 'KYC' %}
+      <div class="card" id="vendor">
+        <h2 class="sec">Record from the KYC vendor</h2>
+        <p class="small muted" style="margin:-6px 0 12px">The vendor works on its
+          existing channel in version 1 — log what comes back here so the timeline
+          and the metrics stay accurate.</p>
+
+        <form method="post" action="{{ url_for('vendor_query', app_id=app.id) }}"
+              class="stack" style="gap:8px;margin-bottom:16px">
+          <label class="lbl">A query from the vendor</label>
+          <textarea name="text" placeholder="Paste the vendor's question…"
+                    style="min-height:60px"></textarea>
+          <button class="btn sm" type="submit" style="align-self:flex-start">Log query</button>
+        </form>
+
+        <form method="post" action="{{ url_for('vendor_result', app_id=app.id) }}"
+              class="stack" style="gap:10px;padding-top:14px;border-top:1px solid var(--hair)">
+          <label class="lbl">The vendor's final result</label>
+          <div class="row" style="gap:14px">
+            <label class="row small" style="gap:7px;cursor:pointer">
+              <input type="radio" name="result" value="CLEARED" checked> Cleared</label>
+            <label class="row small" style="gap:7px;cursor:pointer">
+              <input type="radio" name="result" value="FLAGGED"> Flagged</label>
+          </div>
+          <input type="text" name="vendor_ref" placeholder="Vendor reference, e.g. KV-88213">
+          <textarea name="note" placeholder="Vendor note…" style="min-height:60px"></textarea>
+          <button class="btn primary sm" type="submit" style="align-self:flex-start">
+            Record result &amp; send to Compliance</button>
+        </form>
+      </div>
+    {% endif %}
+
+    <div class="note"><b>Ops is the single channel.</b> The vendor and Compliance
+      never contact the member directly — their queries arrive here, and you route
+      them. Every hop is timestamped on the timeline.</div>
+  </div>
+</div>
+{% endblock %}

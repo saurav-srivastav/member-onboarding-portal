@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+  <style>
+    body { margin: 0; font-family: "IBM Plex Sans", -apple-system, sans-serif; color: #1a2332; }
+    a { color: #c0392f; } a:hover { color: #92251d; }
+    .h { font-family: "Schibsted Grotesk", sans-serif; }
+    .mono { font-family: "IBM Plex Mono", monospace; }
+    .lbl { font-size: 12px; font-weight: 600; color: #37404f; margin-bottom: 5px; }
+    .inp { border: 1px solid #d8d4cc; border-radius: 6px; background: #ffffff; padding: 9px 12px; font-size: 13.5px; }
+    .ph { color: #a7ada2; }
+  </style>
+</helmet>
+<div style="width: 1440px; height: 900px; background: #f4f3f0; display: flex; flex-direction: column; overflow: hidden;">
+
+  <div style="height: 56px; background: #1a2332; color: #ffffff; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <div class="h" style="font-weight: 700; font-size: 16px;">Exchange <span style="color: #e0685c;">·</span> Member Onboarding</div>
+      <div class="mono" style="font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8b95a5; border-left: 1px solid #37404f; padding-left: 14px;">Member portal</div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px; font-size: 13px; color: #c3cad6;">
+      <div style="width: 28px; height: 28px; border-radius: 50%; background: #37404f; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #ffffff;">MT</div>
+      <span>Meridian Trading Pte Ltd</span>
+    </div>
+  </div>
+
+  <div style="padding: 24px 40px 0; flex-shrink: 0;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 18px;">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; background: #c0392f; color: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600;">1</div>
+        <span style="font-size: 13.5px; font-weight: 600;">Application form</span>
+      </div>
+      <div style="width: 40px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #c3cad6; color: #8b95a5; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; box-sizing: border-box;">2</div>
+        <span style="font-size: 13.5px; color: #8b95a5;">Supporting documents</span>
+      </div>
+      <div style="width: 40px; height: 1.5px; background: #d8d4cc;"></div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <div style="width: 24px; height: 24px; border-radius: 50%; border: 1.5px solid #c3cad6; color: #8b95a5; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; box-sizing: border-box;">3</div>
+        <span style="font-size: 13.5px; color: #8b95a5;">Review &amp; submit</span>
+      </div>
+    </div>
+    <h1 class="h" style="margin: 0 0 4px; font-size: 24px; font-weight: 700;">Membership application form</h1>
+    <p style="margin: 0 0 4px; font-size: 14px; color: #5a6473;">Filled directly in the portal — no PDF to download and re-upload. Your answers save automatically as a draft.</p>
+  </div>
+
+  <div style="display: flex; gap: 24px; padding: 18px 40px 28px; flex: 1; min-height: 0;">
+
+    <div style="flex: 1; background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 24px 28px; min-width: 0; display: flex; flex-direction: column; gap: 18px;">
+
+      <div>
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Company details</div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px;">
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Legal entity name</div><div class="inp">Meridian Trading Pte Ltd</div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">UEN / registration number</div><div class="inp">202412345K</div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Country of incorporation</div><div class="inp" style="display: flex; justify-content: space-between; align-items: center;">Singapore <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#8b95a5" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Date of incorporation</div><div class="inp">14 Mar 2024</div></div>
+          <div style="display: flex; flex-direction: column; grid-column: span 2;"><div class="lbl">Registered address</div><div class="inp ph">e.g. 12 Marina Boulevard, #21-01, Singapore 018982</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Membership applied for</div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px 18px;">
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Membership class</div><div class="inp" style="display: flex; justify-content: space-between; align-items: center;">Securities trading member <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#8b95a5" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Regulated by</div><div class="inp" style="display: flex; justify-content: space-between; align-items: center;">MAS — Capital Markets Services licence <svg width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="#8b95a5" stroke-width="1.5" stroke-linecap="round"/></svg></div></div>
+          <div style="display: flex; flex-direction: column; grid-column: span 2;"><div class="lbl">Licence number</div><div class="inp ph">e.g. CMS100XXX</div></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="h" style="font-size: 15px; font-weight: 700; margin-bottom: 12px;">Primary contact for this application</div>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 18px;">
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Full name</div><div class="inp">Tan Wei Ling</div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Email</div><div class="inp">weiling.tan@meridian.sg</div></div>
+          <div style="display: flex; flex-direction: column;"><div class="lbl">Phone</div><div class="inp ph">+65 …</div></div>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; align-items: flex-start; background: #f6f5f2; border-radius: 7px; padding: 12px 16px;">
+        <div style="width: 18px; height: 18px; border: 1.5px solid #8b95a5; border-radius: 4px; flex-shrink: 0; margin-top: 1px;"></div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.5;">I declare that the information provided in this application is true and complete, and that I am authorised to submit it on behalf of the applicant entity.</div>
+      </div>
+    </div>
+
+    <div style="width: 360px; flex-shrink: 0; display: flex; flex-direction: column; gap: 16px;">
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 20px 22px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 10px;">Form progress</div>
+        <div style="display: flex; flex-direction: column; gap: 9px; font-size: 13px;">
+          <div style="display: flex; align-items: center; gap: 9px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Company details</div>
+          <div style="display: flex; align-items: center; gap: 9px;"><svg width="13" height="13" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2 5 8.7l4.5-5.4" stroke="#2e7d4f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Membership applied for</div>
+          <div style="display: flex; align-items: center; gap: 9px; color: #b07d1e;"><div style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid #b07d1e; box-sizing: border-box;"></div>Primary contact — 1 field left</div>
+          <div style="display: flex; align-items: center; gap: 9px; color: #8b95a5;"><div style="width: 11px; height: 11px; border-radius: 50%; border: 2px solid #c3cad6; box-sizing: border-box;"></div>Declaration</div>
+        </div>
+        <div style="margin-top: 14px; font-size: 12px; color: #8b95a5;">Draft saved automatically · last saved just now</div>
+      </div>
+
+      <div style="background: #ffffff; border: 1px solid #e4e1db; border-radius: 8px; padding: 18px 22px;">
+        <div class="h" style="font-size: 14px; font-weight: 700; margin-bottom: 6px;">What happens next</div>
+        <div style="font-size: 12.5px; color: #5a6473; line-height: 1.55;">Step 2 asks for your supporting documents (certificates, financials, policies). You can move between steps freely — nothing is sent to the exchange until you submit at step 3.</div>
+      </div>
+
+      <div style="display: flex; gap: 10px; margin-top: auto;">
+        <div style="flex: 1; text-align: center; border: 1.5px solid #d8d4cc; color: #37404f; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">Save draft</div>
+        <div style="flex: 1.4; text-align: center; background: #c0392f; color: #ffffff; font-size: 13.5px; font-weight: 600; padding: 11px 0; border-radius: 7px;">Continue to documents →</div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>

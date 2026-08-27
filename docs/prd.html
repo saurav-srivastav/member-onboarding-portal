@@ -1,0 +1,285 @@
+<title>Member Onboarding Portal PRD</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #faf9f7;
+    --ink: #1a2332;
+    --muted: #5a6473;
+    --line: #e4e1db;
+    --accent: #c0392f;
+    --panel: #f1efeb;
+    --ok: #2e7d4f;
+    --warn: #b07d1e;
+    --mono-bg: #eceae5;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper: #14181f;
+      --ink: #e8e6e1;
+      --muted: #9aa3b0;
+      --line: #2b313c;
+      --accent: #e05c50;
+      --panel: #1b202a;
+      --ok: #5cb884;
+      --warn: #d4a548;
+      --mono-bg: #232936;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14181f;
+    --ink: #e8e6e1;
+    --muted: #9aa3b0;
+    --line: #2b313c;
+    --accent: #e05c50;
+    --panel: #1b202a;
+    --ok: #5cb884;
+    --warn: #d4a548;
+    --mono-bg: #232936;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 16px/1.65 "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif;
+  }
+  .page { max-width: 74ch; margin: 0 auto; padding: 56px 24px 96px; }
+
+  .kicker {
+    font: 500 12px/1 "IBM Plex Mono", monospace; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+  }
+  h1 {
+    font-family: "Schibsted Grotesk", "IBM Plex Sans", sans-serif;
+    font-size: 38px; font-weight: 700; line-height: 1.12;
+    letter-spacing: -.015em; margin: 0 0 10px; text-wrap: balance;
+  }
+  .subtitle { color: var(--muted); font-size: 17px; margin: 0 0 28px; max-width: 58ch; }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 8px 28px; padding: 14px 0;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    font-size: 13.5px; color: var(--muted); margin-bottom: 48px;
+  }
+  .meta b { color: var(--ink); font-weight: 600; }
+
+  section { margin-bottom: 52px; }
+  h2 {
+    font-family: "Schibsted Grotesk", sans-serif; font-size: 22px;
+    font-weight: 700; letter-spacing: -.01em; margin: 0 0 16px;
+    display: flex; align-items: baseline; gap: 12px; text-wrap: balance;
+  }
+  h2 .num { font: 500 14px "IBM Plex Mono", monospace; color: var(--accent); }
+  h3 {
+    font-family: "Schibsted Grotesk", sans-serif; font-size: 16px;
+    font-weight: 600; margin: 26px 0 8px;
+  }
+  p { margin: 0 0 14px; }
+  ul, ol { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  li::marker { color: var(--muted); }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+
+  .callout {
+    background: var(--panel); border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 18px 0;
+    font-size: 15px;
+  }
+  .callout b { font-weight: 600; }
+
+  .tablewrap { overflow-x: auto; margin: 18px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+  th {
+    text-align: left; font: 500 12px "IBM Plex Mono", monospace;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+    padding: 8px 14px 8px 0; border-bottom: 1px solid var(--ink);
+  }
+  td { padding: 10px 14px 10px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+
+  code, .stage {
+    font: 500 13px "IBM Plex Mono", monospace; background: var(--mono-bg);
+    padding: 2px 7px; border-radius: 4px; white-space: nowrap;
+  }
+
+  .flow { display: flex; flex-direction: column; gap: 0; margin: 20px 0; }
+  .step { display: flex; gap: 16px; }
+  .step .rail { display: flex; flex-direction: column; align-items: center; width: 26px; flex: none; }
+  .step .dot {
+    width: 12px; height: 12px; border-radius: 50%; background: var(--paper);
+    border: 3px solid var(--muted); margin-top: 5px; flex: none;
+  }
+  .step.member .dot { border-color: var(--accent); }
+  .step.decision .dot { border-color: var(--ok); }
+  .step .rail .cord { width: 2px; flex: 1; background: var(--line); }
+  .step:last-child .cord { display: none; }
+  .step .content { padding-bottom: 22px; }
+  .step h4 { margin: 0 0 3px; font: 600 15px "Schibsted Grotesk", sans-serif; }
+  .step h4 .owner {
+    font: 500 11px "IBM Plex Mono", monospace; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--muted); margin-left: 8px;
+  }
+  .step p { font-size: 14.5px; color: var(--muted); margin: 0; }
+  .loop { color: var(--warn); font-weight: 500; }
+
+  .metricgrid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px; margin: 18px 0;
+  }
+  .metric {
+    border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px;
+    background: var(--panel);
+  }
+  .metric .label {
+    font: 500 11px "IBM Plex Mono", monospace; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+  }
+  .metric .val { font: 700 17px "Schibsted Grotesk", sans-serif; margin-bottom: 2px; }
+  .metric .note { font-size: 12.5px; color: var(--muted); }
+
+  footer { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13px; color: var(--muted); }
+</style>
+
+<div class="page">
+  <div class="kicker">Product Requirements · Draft for review</div>
+  <h1>Member Onboarding Portal</h1>
+  <p class="subtitle">A single shared workspace that takes a prospective member from first document to go-live — replacing the email threads between the member, Operations, the KYC vendor and Compliance.</p>
+  <div class="meta">
+    <span>Author: <b>Saurav Srivastava</b></span>
+    <span>Date: <b>27 Aug 2026</b></span>
+    <span>Status: <b>Draft v1</b></span>
+  </div>
+
+  <section>
+    <h2><span class="num">1</span>Problem</h2>
+    <p>Onboarding a new member today runs on email. The member sends documents to Operations; Operations forwards them to the KYC vendor; the vendor's queries travel back through Operations to the member; Compliance weighs in near the end. Each hand-off is a thread, and nobody — including the member — can see the whole picture at once.</p>
+    <p>The consequences are predictable:</p>
+    <ul>
+      <li><strong>Slow.</strong> Time-to-onboard is dominated not by review work but by waiting — for a reply, for a missing attachment, for someone to notice a thread has stalled.</li>
+      <li><strong>Opaque.</strong> The member's only way to learn their status is to ask. Internally, Service Management can't answer "when will they be live?" without polling Ops.</li>
+      <li><strong>Repetitive.</strong> The same clarification ("wrong format", "statement out of date", "signatory missing") is typed fresh into email every time, and resubmissions restart the loop.</li>
+    </ul>
+    <div class="callout"><b>Core metric: time taken to onboard a member</b> — measured from application created to member live, with time-in-stage tracked per hand-off so the bottleneck is visible, not guessed.</div>
+  </section>
+
+  <section>
+    <h2><span class="num">2</span>Objectives</h2>
+    <ol>
+      <li><strong>Transparency.</strong> One status timeline, visible to the member and to every internal team, that always answers "where are we, who holds the next action, and since when?"</li>
+      <li><strong>Fewer round-trips.</strong> Catch problems at the point of upload (format, completeness) instead of days later by email; when a human query is unavoidable, attach it to the specific document so one reply resolves it.</li>
+      <li><strong>Measurability.</strong> Every stage transition is timestamped, so the core metric and its per-stage breakdown fall out of normal use — no separate reporting effort.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2><span class="num">3</span>Actors</h2>
+    <div class="tablewrap">
+    <table>
+      <tr><th>Actor</th><th>Role in onboarding</th><th>What the portal gives them</th></tr>
+      <tr><td>Member</td><td>The applicant firm. Uploads documents, answers clarifications.</td><td>A checklist with formats and validation, a live progress timeline, and one inbox for all queries.</td></tr>
+      <tr><td>Service Mgmt (Sales)</td><td>Owns the relationship; initiates onboarding.</td><td>Creates the application, invites the member, sees the pipeline without asking Ops.</td></tr>
+      <tr><td>Operations</td><td>Checks completeness, packages and dispatches to the KYC vendor, coordinates everything.</td><td>A queue ordered by waiting time, per-document accept/return with reason, one-click dispatch of the pack.</td></tr>
+      <tr><td>KYC vendor</td><td>Screens the pack; raises queries; returns a result. <strong>Interfaces only with Operations</strong> — never directly with Compliance or the member.</td><td><em>Phase 1:</em> the vendor keeps its existing channel with Ops, and Ops records dispatches, queries and results in the portal. <em>Longer term:</em> API integration, dependent on vendor team availability.</td></tr>
+      <tr><td>Compliance</td><td>Final check; approves or rejects membership. When it needs more from the member, <strong>the request goes through Operations</strong>, not to the member directly.</td><td>A review screen with the full document pack, KYC result and prior queries in one place; an information-request action routed via Ops; a recorded decision with rationale.</td></tr>
+      <tr><td>Technology</td><td>Provisions connectivity and access after approval.</td><td>A provisioning task triggered automatically on approval; marks the member live, which closes the clock on the core metric.</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">4</span>The onboarding pipeline</h2>
+    <p>The application moves through explicit states. Every state has exactly one owning team, so "who holds the next action" is never ambiguous, and time-in-state is attributable.</p>
+    <div class="callout"><b>Operations is the single channel to the member and to the vendor.</b> The KYC vendor talks only to Ops; Compliance reaches the member only through Ops. The portal preserves this rule — vendor and Compliance queries land in the Ops queue, and Ops routes them to the member as clarifications — while keeping every hop visible and timestamped, so the routing adds transparency rather than delay.</div>
+    <div class="flow">
+      <div class="step"><div class="rail"><div class="dot"></div><div class="cord"></div></div>
+        <div class="content"><h4>Invited <span class="owner">Service Mgmt</span></h4>
+        <p>Sales creates the application and invites the member. Clock starts.</p></div></div>
+      <div class="step member"><div class="rail"><div class="dot"></div><div class="cord"></div></div>
+        <div class="content"><h4>Documents in progress <span class="owner">Member</span></h4>
+        <p>Member fills the application form in the portal and works through the supporting-document checklist. Format and size are validated at upload, so a wrong-format file never enters the process. Member submits when both are complete.</p></div></div>
+      <div class="step"><div class="rail"><div class="dot"></div><div class="cord"></div></div>
+        <div class="content"><h4>Ops review <span class="owner">Operations</span></h4>
+        <p>Ops accepts or returns each document. A return names the specific document and reason, and moves only that item back to the member — <span class="loop">the loop is per-document, not per-application.</span></p></div></div>
+      <div class="step"><div class="rail"><div class="dot"></div><div class="cord"></div></div>
+        <div class="content"><h4>With KYC vendor <span class="owner">Operations · Vendor</span></h4>
+        <p>Ops dispatches the accepted pack. Vendor queries come to Ops, are logged against the application, and Ops routes them to the member as clarifications; the vendor's final result is recorded by Ops.</p></div></div>
+      <div class="step"><div class="rail"><div class="dot"></div><div class="cord"></div></div>
+        <div class="content"><h4>Compliance review <span class="owner">Compliance</span></h4>
+        <p>Compliance sees the pack, the KYC result and the full query history, and records approve / reject with rationale. If Compliance needs more from the member, it raises a request that Ops routes onward. Rejection ends the pipeline with a documented reason.</p></div></div>
+      <div class="step"><div class="rail"><div class="dot"></div><div class="cord"></div></div>
+        <div class="content"><h4>Provisioning <span class="owner">Technology</span></h4>
+        <p>Approval automatically opens the provisioning task: connectivity, accounts, access.</p></div></div>
+      <div class="step decision"><div class="rail"><div class="dot"></div><div class="cord"></div></div>
+        <div class="content"><h4>Live <span class="owner">Done</span></h4>
+        <p>Member is onboarded. Clock stops; the application's per-stage timings feed the metrics view.</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">5</span>Requirements — Phase 1</h2>
+
+    <h3>5.1 Application form &amp; document checklist <span class="stage">checklist exists as demo</span></h3>
+    <ul>
+      <li>The <strong>membership application form is filled directly in the portal</strong> as a structured web form — company details, membership class, licence, contacts, declaration — not downloaded and re-uploaded as a PDF. Drafts save automatically, and structured answers can be validated field-by-field and reused downstream (Ops review, the KYC pack, Compliance) without re-keying.</li>
+      <li><strong>Supporting documents</strong> (certificates, financials, policies…) are file uploads: named items with plain-language descriptions and accepted formats; upload validated on extension and size, wrong formats rejected with the expected format named.</li>
+      <li>Replace and remove before submission; progress bar of provided vs. required.</li>
+      <li>An explicit <em>Review &amp; submit</em> step once form and uploads are complete — submission, not upload, is the hand-off to Ops; nothing reaches the exchange before it.</li>
+    </ul>
+
+    <h3>5.2 Status timeline</h3>
+    <ul>
+      <li>The pipeline of §4 rendered as a timeline on every application: completed, current and upcoming stages, who owns the current one, and how long it has been there.</li>
+      <li>Identical truth for member and internal views; the member sees the stage timeline plus the accept/return status of each of their own documents, and internal users additionally see the full clarification and query history.</li>
+    </ul>
+
+    <h3>5.3 Clarifications (kills the email back-and-forth)</h3>
+    <ul>
+      <li>Clarifications to the member are always issued by Operations — Ops raises its own, and relays those from the KYC vendor or Compliance, which land in the Ops queue as route-onward tasks. The member answers by replying or re-uploading, which resolves the item; the originator sees the answer without another email hop.</li>
+      <li>Open clarifications block stage progression and are visible on the timeline, so a stalled application shows <em>why</em> it is stalled.</li>
+      <li>Common return reasons offered as one-click templates (wrong format, outdated statement, missing signatory…).</li>
+    </ul>
+
+    <h3>5.4 Role dashboards</h3>
+    <ul>
+      <li><strong>Ops queue:</strong> all applications, ordered by time waiting on Ops, with per-document review actions and vendor dispatch.</li>
+      <li><strong>Compliance queue:</strong> applications awaiting decision, each opening the single-page review described in §3.</li>
+      <li><strong>Pipeline view</strong> (Service Mgmt / management): every in-flight application as a row against the stage pipeline, stalls highlighted.</li>
+    </ul>
+
+    <h3>5.5 Notifications</h3>
+    <ul>
+      <li>Email notification on stage change and on new clarification, linking into the portal — email becomes the doorbell, never the workspace.</li>
+      <li>Reminder to the stage owner when an application sits in one stage beyond that stage's SLA. Thresholds are <strong>per stage</strong> (volumes are low, and stages differ widely in expected duration — e.g. Ops review days, KYC screening weeks), kept in a simple admin-editable table.</li>
+    </ul>
+
+    <h3>5.6 Metrics</h3>
+    <div class="metricgrid">
+      <div class="metric"><div class="label">Primary</div><div class="val">Time to onboard</div><div class="note">Invited → Live, median and p90</div></div>
+      <div class="metric"><div class="label">Diagnostic</div><div class="val">Time in stage</div><div class="note">Per stage, per application — finds the bottleneck</div></div>
+      <div class="metric"><div class="label">Diagnostic</div><div class="val">Round-trips</div><div class="note">Clarifications + returns per application</div></div>
+      <div class="metric"><div class="label">Leading</div><div class="val">First-time-right</div><div class="note">% of documents accepted without a return</div></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">6</span>Out of scope for Phase 1</h2>
+    <ul>
+      <li>KYC-vendor API integration — planned as a second step, but longer-term and dependent on vendor team availability. In version 1 the vendor keeps its existing channel and Ops proxies.</li>
+      <li>SSO / corporate identity integration; Phase 1 uses simple invited accounts.</li>
+      <li>E-signatures, document content extraction, or automated screening.</li>
+      <li>Multiple concurrent applications per member firm.</li>
+      <li>Data residency and retention handling for uploaded KYC documents — a production concern to be settled before go-live; the prototype stores files locally with no retention logic.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="num">7</span>Working assumptions</h2>
+    <p>Made to keep version 1 moving; each is cheap to revisit if it turns out wrong.</p>
+    <ol>
+      <li><strong>One document checklist for all membership classes.</strong> Class-specific documents can be added later as extra checklist items without structural change.</li>
+      <li><strong>The KYC vendor keeps its existing channel with Ops in version 1.</strong> API integration is the second step, planned longer-term against vendor team availability — the portal's data model records dispatches, queries and results from day one so the integration slots in without rework.</li>
+      <li><strong>Stall thresholds are per stage,</strong> reflecting low onboarding volumes and stages of very different expected duration.</li>
+      <li><strong>Data residency and retention are deferred to productionisation</strong> (see §6); nothing in the prototype should be treated as the system of record.</li>
+    </ol>
+  </section>
+
+  <footer>This PRD defines the Phase 1 build. Mock-ups of the key screens and a clickable prototype — eleven wired screens covering the full flow from invitation to go-live — accompany this document, and the portal itself implements what is specified here.</footer>
+</div>

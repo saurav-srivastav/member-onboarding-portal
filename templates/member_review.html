@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Review &amp; submit · {{ app.member_name }}{% endblock %}
+{% block body %}
+{{ m.steps(3) }}
+<div class="pagehead">
+  <div>
+    <h1>Review &amp; submit</h1>
+    <p class="sub">Check everything once — after submission, changes happen only
+      through clarifications from Operations.</p>
+  </div>
+  <div class="mono small faint">{{ app.id }}</div>
+</div>
+
+<div class="cols">
+  <div class="grow card">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px">
+      <h2 class="sec" style="margin:0">Application form</h2>
+      <a class="small" style="font-weight:600"
+         href="{{ url_for('member_form', app_id=app.id) }}">Edit</a>
+    </div>
+    {% for section in sections %}
+      {% for f in section.fields %}
+        <div class="row" style="justify-content:space-between;gap:16px;
+             font-size:13px;padding:6px 0">
+          <span class="faint">{{ f.label }}</span>
+          <span style="font-weight:500;text-align:right">
+            {{ form.get(f.id) or '—' }}</span>
+        </div>
+      {% endfor %}
+    {% endfor %}
+    <div class="row" style="gap:12px;align-items:flex-start;margin-top:14px;
+         padding-top:14px;border-top:1px solid var(--hair)">
+      {% if app.declared %}
+        <span class="mark done" style="width:18px;height:18px;border-radius:4px;color:#fff">{{ m.tick(11) }}</span>
+        <span class="small muted">Declaration signed by
+          {{ form.get('contact_name') or 'the primary contact' }}.</span>
+      {% else %}
+        <span style="width:18px;height:18px;border-radius:4px;border:1.5px solid var(--warn);flex:none"></span>
+        <span class="small" style="color:var(--warn)">Declaration not signed yet —
+          tick it on the form.</span>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="grow card">
+    <div class="row" style="justify-content:space-between;margin-bottom:8px">
+      <h2 class="sec" style="margin:0">Supporting documents</h2>
+      <span class="row" style="gap:12px">
+        <span class="mono small" style="color:{{ 'var(--ok)' if uploaded == total_docs else 'var(--warn)' }}">
+          {{ uploaded }} of {{ total_docs }}</span>
+        <a class="small" style="font-weight:600"
+           href="{{ url_for('member_documents', app_id=app.id) }}">Edit</a>
+      </span>
+    </div>
+    {% for doc, row in docs %}
+      <div class="row" style="gap:9px;font-size:12.5px;padding:4px 0">
+        {% if row.status in ('UPLOADED', 'ACCEPTED') %}
+          <span style="color:var(--ok);display:flex">{{ m.tick(13) }}</span>
+        {% else %}
+          <span style="width:13px;height:13px;border-radius:50%;
+                border:2px solid {{ 'var(--warn)' if row.status == 'RETURNED' else '#c3cad6' }};flex:none"></span>
+        {% endif %}
+        <span>{{ doc.name }}</span>
+        <span class="mono faint" style="margin-left:auto">
+          {{ row.filename or (row.status == 'RETURNED' and 'returned — re-upload needed' or 'not provided') }}</span>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="side stack" style="gap:16px">
+    {% if blockers %}
+      <div class="card" style="background:var(--warn-soft);border-color:var(--warn-line)">
+        <h2 class="sec" style="color:#6e5417">Not ready to submit</h2>
+        <ul class="small" style="margin:0;padding-left:18px;color:#6e5417">
+          {% for b in blockers %}<li>{{ b }}</li>{% endfor %}
+        </ul>
+      </div>
+    {% else %}
+      <div class="card" style="background:var(--ok-soft);border-color:#bcd9c6">
+        <h2 class="sec" style="color:var(--ok-ink)">Everything is complete</h2>
+        <p class="small" style="margin:0;color:#35573f">Form filled and declared ·
+          {{ total_docs }} of {{ total_docs }} documents uploaded in the accepted
+          formats. Submitting hands the pack to Operations and moves your
+          application to <b>Ops review</b>.</p>
+      </div>
+    {% endif %}
+
+    <div class="card">
+      <h2 class="sec">After you submit</h2>
+      <p class="small muted" style="margin:0">You'll track progress on a live
+        timeline. If anything needs fixing, Operations returns the specific
+        document with a reason — you'll never be asked to resend the whole pack.</p>
+    </div>
+
+    <div class="row" style="gap:10px">
+      <a class="btn grow" href="{{ url_for('member_documents', app_id=app.id) }}">← Back to documents</a>
+      <form method="post" action="{{ url_for('submit', app_id=app.id) }}" style="flex:1.4">
+        <button class="btn {{ 'primary' if not blockers else 'off' }}"
+                style="width:100%" type="submit"
+                {{ 'disabled' if blockers }}>Submit application</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Onboarding pipeline{% endblock %}
+{% block body %}
+<div class="pagehead">
+  <div>
+    <h1>Onboarding pipeline</h1>
+    <p class="sub">Every application, where it sits, and where the time is going.</p>
+  </div>
+  <div class="row" style="gap:28px;align-items:flex-end">
+    <div style="text-align:right">
+      <div class="mono small faint" style="letter-spacing:.09em;text-transform:uppercase">Median time to onboard</div>
+      <div class="h" style="font-size:22px;font-weight:700">
+        {{ metrics.median_onboard if metrics.median_onboard is not none else '—' }} d</div></div>
+    <div style="text-align:right">
+      <div class="mono small faint" style="letter-spacing:.09em;text-transform:uppercase">First-time-right docs</div>
+      <div class="h" style="font-size:22px;font-weight:700">
+        {{ metrics.first_time_right if metrics.first_time_right is not none else '—' }}%</div></div>
+    <div style="text-align:right">
+      <div class="mono small faint" style="letter-spacing:.09em;text-transform:uppercase">Round-trips / application</div>
+      <div class="h" style="font-size:22px;font-weight:700">{{ metrics.round_trips_per_app }}</div></div>
+    <a class="btn primary" href="{{ url_for('new_application') }}">New application</a>
+  </div>
+</div>
+
+<div class="card" style="padding:20px 24px 8px;margin-bottom:14px">
+  <div class="row" style="padding-bottom:12px;border-bottom:1px solid var(--hair);gap:12px">
+    <div style="width:250px"></div>
+    <div class="grow mono small faint" style="letter-spacing:.07em;text-transform:uppercase">Stage progress</div>
+    <div style="width:86px"></div>
+  </div>
+
+  {% for r in rows %}
+    {% set a = r.app %}
+    <div class="row" style="padding:13px 0;border-bottom:1px solid var(--hair);gap:12px;
+         {% if r.sla == 'over' %}background:#fdf9f1;margin:0 -24px;padding-left:24px;padding-right:24px{% endif %}">
+      <div style="width:250px;flex:none">
+        <div style="font-size:13.5px;font-weight:600">
+          <a href="{{ url_for('member_status', app_id=a.id) }}" style="color:inherit">{{ a.member_name }}</a>
+          {% if r.sla == 'over' %}<span class="pill" style="background:var(--warn);
+            color:#fff;margin-left:4px">STALLED</span>{% endif %}</div>
+        <div class="mono small faint">{{ a.id }} ·
+          {%- if r.onboarded_in is not none %} onboarded in {{ r.onboarded_in }} d
+          {%- else %} day {{ r.day }}{% endif %}</div>
+      </div>
+
+      <div class="grow row" style="gap:5px">
+        {% for s in r.timeline %}
+          {% set colour = 'var(--ok)' if s.state == 'done'
+             else ('var(--accent)' if (s.state == 'current' and r.sla == 'over')
+             else ('var(--warn)' if (s.state == 'current' and r.sla == 'approaching')
+             else ('var(--ink)' if s.state == 'current' else 'var(--hair)'))) %}
+          <div class="grow" title="{{ s.label }}{% if s.days is not none %} · {{ s.days }} d{% endif %}">
+            <div class="seg" style="height:10px;border-radius:3px;background:{{ colour }};
+                 position:relative">
+              {% if s.state == 'current' %}
+                <span style="position:absolute;right:-2px;top:-3px;width:8px;height:16px;
+                      border-radius:3px;background:#e0685c"></span>
+              {% endif %}
+            </div>
+            <div class="small faint" style="font-size:10px;margin-top:4px;
+                 white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ s.label }}</div>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div style="width:86px;flex:none;text-align:right">
+        <span class="mono small" style="font-weight:500;
+              color:{{ 'var(--accent)' if r.sla == 'over' else ('var(--warn)' if r.sla == 'approaching' else 'var(--muted)') }}">
+          {% if r.onboarded_in is not none %}complete{% else %}{{ r.days }} d here{% endif %}</span>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="row" style="gap:22px;padding:0 4px;font-size:12px;color:var(--muted);flex-wrap:wrap">
+  <span class="row" style="gap:7px"><i style="width:22px;height:8px;border-radius:3px;
+    background:var(--ok);display:block"></i>Completed stage</span>
+  <span class="row" style="gap:7px"><i style="width:22px;height:8px;border-radius:3px;
+    background:var(--ink);display:block"></i>Current stage</span>
+  <span class="row" style="gap:7px"><i style="width:22px;height:8px;border-radius:3px;
+    background:var(--warn);display:block"></i>Approaching SLA</span>
+  <span class="row" style="gap:7px"><i style="width:22px;height:8px;border-radius:3px;
+    background:var(--accent);display:block"></i>Over SLA</span>
+  <span class="row" style="gap:7px"><i style="width:8px;height:14px;border-radius:3px;
+    background:#e0685c;display:block"></i>Where the application sits today</span>
+</div>
+{% endblock %}

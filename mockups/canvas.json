@@ -1,0 +1,111 @@
+{
+  "artboards": [
+    {
+      "file": "ApplicationForm.dc.html",
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "Member — application form · day 1"
+    },
+    {
+      "file": "DocumentUpload.dc.html",
+      "x": 1560,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "Member — supporting documents · day 1"
+    },
+    {
+      "file": "Main.dc.html",
+      "x": 3120,
+      "y": 0,
+      "w": 1440,
+      "h": 900,
+      "title": "Member — status after submission · day 6"
+    },
+    {
+      "file": "OpsQueue.dc.html",
+      "x": 0,
+      "y": 1040,
+      "w": 1440,
+      "h": 900,
+      "title": "Operations — queue"
+    },
+    {
+      "file": "ApplicationDetail.dc.html",
+      "x": 1560,
+      "y": 1040,
+      "w": 1440,
+      "h": 900,
+      "title": "Operations — application detail"
+    },
+    {
+      "file": "ComplianceReview.dc.html",
+      "x": 3120,
+      "y": 1040,
+      "w": 1440,
+      "h": 900,
+      "title": "Compliance — review & decision"
+    },
+    {
+      "file": "Pipeline.dc.html",
+      "x": 0,
+      "y": 2080,
+      "w": 1440,
+      "h": 900,
+      "title": "Service Management — pipeline"
+    },
+    {
+      "file": "CreateApplication.dc.html",
+      "x": 1560,
+      "y": 2080,
+      "w": 1440,
+      "h": 900,
+      "title": "Service Mgmt — create & invite"
+    },
+    {
+      "file": "ReviewSubmit.dc.html",
+      "x": 3120,
+      "y": 2080,
+      "w": 1440,
+      "h": 900,
+      "title": "Member — review & submit · day 2"
+    },
+    {
+      "file": "Provisioning.dc.html",
+      "x": 0,
+      "y": 3120,
+      "w": 1440,
+      "h": 900,
+      "title": "Technology — provisioning"
+    },
+    {
+      "file": "MemberLive.dc.html",
+      "x": 1560,
+      "y": 3120,
+      "w": 1440,
+      "h": 900,
+      "title": "Member — live on the exchange · day 28"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "form-not-pdf",
+      "x": 0,
+      "y": -160,
+      "w": 300,
+      "text": "The Membership Application Form is filled directly in the portal (screen 1) — not downloaded and re-uploaded as a PDF. Only supporting documents are file uploads."
+    },
+    {
+      "id": "routing-rule",
+      "x": 3120,
+      "y": 3120,
+      "w": 320,
+      "text": "Interaction rule carried through every screen:\n\n- KYC vendor talks only to Operations.\n- Compliance reaches the member only through Operations.\n\nVendor and Compliance queries land in the Ops queue as route-onward items; the member always sees a single voice (Ops), and every hop is timestamped for the time-to-onboard metric."
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}

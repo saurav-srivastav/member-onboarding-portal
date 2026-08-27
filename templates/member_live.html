@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Live on the exchange · {{ app.member_name }}{% endblock %}
+{% block body %}
+<div style="max-width:900px;margin:40px auto">
+  <div style="text-align:center;margin-bottom:28px">
+    <div class="mark done" style="width:64px;height:64px;color:#fff;margin:0 auto 16px">
+      {{ m.tick(30) }}</div>
+    <h1 style="font-size:30px">You're live on the exchange</h1>
+    <p class="sub" style="font-size:15px">{{ app.member_name }} is now a
+      {{ app.membership_class|lower }}. Onboarded in
+      <b style="color:var(--ink)">{{ day }} days</b>, invitation to go-live.</p>
+  </div>
+
+  <div class="card" style="margin-bottom:16px">{{ m.strip(timeline) }}</div>
+
+  <div class="cols">
+    <div class="grow card">
+      <h2 class="sec">Your access</h2>
+      <p class="small muted" style="margin:0">Trading connectivity is active and
+        your named users have credentials. Connection details and entitlements
+        were sent to your primary contact.</p>
+    </div>
+    <div class="grow card">
+      <h2 class="sec">Your documents</h2>
+      <p class="small muted" style="margin:0">The submitted pack and the full
+        application history stay available here for your records — including every
+        clarification and its resolution.</p>
+    </div>
+    <div class="grow card">
+      <h2 class="sec">Who to contact</h2>
+      <p class="small muted" style="margin:0">Day-to-day matters now go to
+        Member Services. Your onboarding sponsor {{ app.sponsor }} remains your
+        relationship contact.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Supporting documents · {{ app.member_name }}{% endblock %}
+{% block body %}
+{{ m.steps(2) }}
+<div class="pagehead">
+  <div>
+    <h1>Supporting documents</h1>
+    <p class="sub">Upload each document in the format shown. Files are checked at
+      upload, so a wrong format is caught immediately — not days later by email.</p>
+  </div>
+  <div style="width:220px">
+    <div class="row" style="justify-content:space-between;font-size:12px;
+         color:var(--muted);margin-bottom:5px">
+      <span>Uploaded</span>
+      <span class="mono" style="font-weight:500;color:var(--ink)">{{ uploaded }} of {{ total_docs }}</span>
+    </div>
+    <div class="prog"><i style="width:{{ (100 * uploaded / total_docs)|round }}%"></i></div>
+  </div>
+</div>
+
+<div class="cols">
+  <div class="grow stack" style="gap:9px">
+    {% for doc, row in docs %}
+      {% set provided = row.status in ('UPLOADED', 'ACCEPTED') %}
+      <div class="card row" style="padding:{{ '12px 18px' if provided else '15px 18px' }};
+           {% if row.status == 'RETURNED' %}border-color:var(--warn-line){% endif %}">
+        {% if row.status == 'ACCEPTED' %}
+          <span class="mark done" style="color:#fff">{{ m.tick() }}</span>
+        {% elif row.status == 'UPLOADED' %}
+          <span class="mark done" style="color:#fff">{{ m.tick() }}</span>
+        {% elif row.status == 'RETURNED' %}
+          <span class="mark warn" style="color:#fff">{{ m.upload_icon(12) }}</span>
+        {% else %}
+          <span class="mark todo"></span>
+        {% endif %}
+
+        <div class="grow">
+          <div class="row" style="gap:10px">
+            <span style="font-size:14px;font-weight:600">{{ doc.name }}</span>
+            {% if row.status == 'RETURNED' %}<span class="pill warn">RETURNED</span>{% endif %}
+            {% if row.status == 'ACCEPTED' %}<span class="pill ok">ACCEPTED</span>{% endif %}
+          </div>
+          {% if provided %}
+            <div class="small muted">{{ row.filename }}
+              {%- if row.status == 'ACCEPTED' %} · accepted by Operations{% endif %}</div>
+          {% else %}
+            <div class="small muted">{{ doc.description }}
+              <b style="color:#37404f">{{ doc.formats|map('upper')|join(', ') }}</b>
+              · max {{ max_size_mb }} MB</div>
+          {% endif %}
+          {% if row.return_reason %}
+            <div class="small" style="margin-top:8px;background:var(--warn-soft);
+                 border-radius:6px;padding:8px 12px;color:#6e5417">
+              <b>Reason from Operations:</b> {{ row.return_reason }}</div>
+          {% endif %}
+        </div>
+
+        <div class="row" style="gap:8px">
+          <form method="post" enctype="multipart/form-data"
+                action="{{ url_for('upload', app_id=app.id, doc_id=doc.id) }}">
+            <label class="btn {{ 'primary' if row.status == 'RETURNED' else ('sm' if provided else 'ghost') }}"
+                   style="cursor:pointer">
+              {% if row.status == 'RETURNED' %}Re-upload
+              {% elif provided %}Replace
+              {% else %}{{ m.upload_icon() }} Upload{% endif %}
+              <input type="file" name="file" hidden
+                     accept="{% for e in doc.formats %}.{{ e }}{{ ',' if not loop.last }}{% endfor %}"
+                     onchange="this.form.submit()">
+            </label>
+          </form>
+          {% if provided and row.status != 'ACCEPTED' %}
+            <form method="post" action="{{ url_for('remove', app_id=app.id, doc_id=doc.id) }}">
+              <button class="btn quiet sm" type="submit">Remove</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="side stack" style="gap:16px">
+    <div class="card">
+      <h2 class="sec">Before you submit</h2>
+      <p class="small muted" style="margin:0 0 10px">Common reasons documents get
+        returned — a 30-second check now saves a round-trip later:</p>
+      <div class="stack" style="gap:8px">
+        <div class="row small" style="gap:9px;align-items:flex-start">
+          <span style="color:var(--accent)">—</span>
+          <span>Financial statements must be <b>signed</b> audited versions</span></div>
+        <div class="row small" style="gap:9px;align-items:flex-start">
+          <span style="color:var(--accent)">—</span>
+          <span>Structure chart shows <b>percentages at every level</b></span></div>
+        <div class="row small" style="gap:9px;align-items:flex-start">
+          <span style="color:var(--accent)">—</span>
+          <span>Licence copy is <b>current</b>, not the application letter</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="sec">Nothing sent yet</h2>
+      <p class="small muted" style="margin:0">Uploads stay in your draft until you
+        submit at step 3. You can replace or remove any file until then.</p>
+    </div>
+
+    <div class="row" style="gap:10px">
+      <a class="btn grow" href="{{ url_for('member_form', app_id=app.id) }}">← Back to form</a>
+      <a class="btn {{ 'primary' if not blockers else 'off' }}" style="flex:1.4"
+         href="{{ url_for('member_review', app_id=app.id) }}">Review &amp; submit</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

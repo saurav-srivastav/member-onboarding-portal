@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}{{ app.member_name }} · Provisioning{% endblock %}
+{% block body %}
+<div class="card" style="margin-bottom:22px">
+  <div class="crumb"><a href="{{ url_for('tech') }}">← Provisioning tasks</a> &nbsp;/&nbsp; {{ app.id }}</div>
+  <div class="pagehead" style="margin-bottom:14px">
+    <div>
+      <h1 style="font-size:22px">{{ app.member_name }} — provisioning</h1>
+      <p class="sub small">{{ app.membership_class }} · Approved by Compliance ·
+        Task opened automatically on approval · Application day {{ day }}</p>
+    </div>
+    <span class="pill {{ 'ok' if app.stage == 'LIVE' else 'ok' }}">
+      {{ 'LIVE' if app.stage == 'LIVE' else 'APPROVED' }}</span>
+  </div>
+  {{ m.strip(timeline) }}
+</div>
+
+<div class="cols">
+  <div class="grow card" style="flex:1.2">
+    <div class="row" style="justify-content:space-between;margin-bottom:14px">
+      <h2 class="sec" style="margin:0">Provisioning checklist</h2>
+      <span class="mono small muted">{{ done }} of {{ tasks|length }} complete</span>
+    </div>
+    {% for t in tasks %}
+      <form method="post" action="{{ url_for('toggle_task', app_id=app.id, task_id=t.id) }}">
+        <label class="row" style="padding:13px 0;border-bottom:1px solid var(--hair);
+               cursor:{{ 'default' if app.stage == 'LIVE' else 'pointer' }}">
+          <input type="checkbox" name="done" {{ 'checked' if t.status == 'DONE' }}
+                 {{ 'disabled' if app.stage == 'LIVE' }}
+                 onchange="this.form.submit()"
+                 style="width:18px;height:18px;accent-color:var(--ok);flex:none">
+          <div class="grow">
+            <div style="font-size:14px;font-weight:600">{{ t.name }}</div>
+          </div>
+          {% if t.status == 'DONE' %}<span class="pill ok">DONE</span>
+          {% else %}<span class="pill grey">PENDING</span>{% endif %}
+        </label>
+      </form>
+    {% endfor %}
+  </div>
+
+  <div class="grow stack" style="gap:16px">
+    <div class="card">
+      <h2 class="sec">Compliance decision</h2>
+      <p class="small" style="margin:0 0 8px">
+        <b style="color:var(--ok-ink)">{{ (app.decision or 'Approved')|capitalize }}</b>
+        {% if app.decided_by %} · recorded by {{ app.decided_by }}{% endif %}</p>
+      {% if app.decision_rationale %}
+        <div class="small muted" style="background:#f6f5f2;border-radius:6px;
+             padding:10px 14px;line-height:1.5">“{{ app.decision_rationale }}”</div>
+      {% endif %}
+    </div>
+
+    <div class="card">
+      <h2 class="sec">Going live</h2>
+      <p class="small muted" style="margin:-6px 0 14px">Marking the member live
+        completes onboarding: the time-to-onboard clock stops, the member and every
+        internal team see it, and the per-stage timings feed the metrics view.</p>
+      {% if app.stage == 'LIVE' %}
+        <div class="row" style="gap:10px;color:var(--ok-ink);font-weight:600">
+          {{ m.tick(16) }} Member is live — onboarded in {{ day }} days.</div>
+      {% else %}
+        <form method="post" action="{{ url_for('go_live', app_id=app.id) }}">
+          <button class="btn {{ 'go' if done == tasks|length else 'off' }}"
+                  style="width:100%" type="submit"
+                  {{ 'disabled' if done != tasks|length }}>Mark member live</button>
+        </form>
+        {% if done != tasks|length %}
+          <p class="small faint" style="margin:8px 0 0;text-align:center">
+            Enabled when all {{ tasks|length }} checklist items are complete</p>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

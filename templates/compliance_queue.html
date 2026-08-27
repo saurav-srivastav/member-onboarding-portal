@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}Compliance review queue{% endblock %}
+{% block body %}
+<div class="pagehead">
+  <div>
+    <h1>Compliance review queue</h1>
+    <p class="sub">Applications awaiting a decision, plus decisions already recorded.</p>
+  </div>
+</div>
+
+<div class="tablecard">
+  <table>
+    <tr><th>Member</th><th>Status</th><th>KYC result</th><th>In stage</th>
+        <th>Application day</th><th style="text-align:right">Action</th></tr>
+    {% for r in rows %}
+      <tr>
+        <td><div style="font-weight:600">{{ r.app.member_name }}</div>
+          <div class="mono small faint">{{ r.app.id }} · {{ r.app.membership_class }}</div></td>
+        <td>{% if r.app.decision %}
+              <span class="pill {{ 'ok' if r.app.decision == 'APPROVED' else 'bad' }}">
+                {{ r.app.decision }}</span>
+            {% else %}{{ m.stage_pill(r.app.stage) }}{% endif %}</td>
+        <td>{% if r.app.kyc_result %}
+              <span class="pill {{ 'ok' if r.app.kyc_result == 'CLEARED' else 'warn' }}">
+                KYC {{ r.app.kyc_result }}</span>
+            {% else %}<span class="faint">—</span>{% endif %}</td>
+        <td><span class="mono" style="font-weight:500;
+            color:{{ 'var(--warn)' if r.sla else 'var(--ink)' }}">{{ r.days }} d</span></td>
+        <td class="muted">day {{ r.day }}</td>
+        <td style="text-align:right">
+          <a class="btn sm {{ 'primary' if r.app.stage == 'COMPLIANCE' }}"
+             href="{{ url_for('compliance_review', app_id=r.app.id) }}">
+            {{ 'Review' if r.app.stage == 'COMPLIANCE' else 'View' }}</a></td>
+      </tr>
+    {% else %}
+      <tr><td colspan="6" class="muted" style="text-align:center;padding:28px">
+        Nothing awaiting compliance review.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

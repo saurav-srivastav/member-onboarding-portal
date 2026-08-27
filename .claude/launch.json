@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "onboarding",
+      "runtimeExecutable": "/Users/sauravsrivastava/Documents/projects/member-onboarding-portal/.venv/bin/python",
+      "runtimeArgs": ["/Users/sauravsrivastava/Documents/projects/member-onboarding-portal/app.py"],
+      "port": 5001
+    }
+  ]
+}

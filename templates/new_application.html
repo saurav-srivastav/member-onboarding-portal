@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% import "_macros.html" as m %}
+{% block title %}New membership application{% endblock %}
+{% block body %}
+<div class="pagehead">
+  <div>
+    <h1>New membership application</h1>
+    <p class="sub">Create the application and invite the member's contact. The
+      time-to-onboard clock starts the moment the invitation is sent.</p>
+  </div>
+</div>
+
+<form method="post" class="cols">
+  <div class="grow card stack" style="gap:22px">
+    <div>
+      <h2 class="sec">Applicant</h2>
+      <div class="grid2">
+        <div>
+          <label class="lbl" for="member_name">Legal entity name</label>
+          <input type="text" id="member_name" name="member_name"
+                 value="{{ form.get('member_name','') }}"
+                 placeholder="e.g. Meridian Trading Pte Ltd" autofocus>
+        </div>
+        <div>
+          <label class="lbl" for="membership_class">Membership class applied for</label>
+          <select id="membership_class" name="membership_class">
+            {% for k in ['Securities trading member', 'Derivatives trading member',
+                         'Clearing member'] %}
+              <option {{ 'selected' if form.get('membership_class') == k }}>{{ k }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="lbl" for="sponsor">Sponsor (Service Management)</label>
+          <input type="text" id="sponsor" name="sponsor"
+                 value="{{ form.get('sponsor','A. Lim') }}">
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="sec">Member contact to invite</h2>
+      <div class="grid2">
+        <div>
+          <label class="lbl" for="contact_name">Full name</label>
+          <input type="text" id="contact_name" name="contact_name"
+                 value="{{ form.get('contact_name','') }}" placeholder="e.g. Tan Wei Ling">
+        </div>
+        <div>
+          <label class="lbl" for="contact_email">Work email</label>
+          <input type="email" id="contact_email" name="contact_email"
+                 value="{{ form.get('contact_email','') }}"
+                 placeholder="e.g. weiling.tan@meridian.sg">
+        </div>
+      </div>
+      <p class="small muted" style="margin:12px 0 0">The invitation email contains a
+        secure link to the member portal. The contact can add colleagues from their
+        firm once inside.</p>
+    </div>
+
+    <div style="background:#f6f5f2;border-radius:7px;padding:14px 18px">
+      <h2 class="sec" style="font-size:13.5px">This application will require</h2>
+      <p class="small muted" style="margin:0">The in-portal membership application
+        form, plus 9 supporting documents (certificate of incorporation,
+        constitution, board resolution, shareholding chart, audited financials,
+        directors list, signatory list, regulatory licence, AML/CFT policy).
+        One standard checklist applies to all membership classes.</p>
+    </div>
+  </div>
+
+  <div class="side stack" style="gap:16px">
+    <div class="card">
+      <h2 class="sec">What happens when you send</h2>
+      <div class="stack" style="gap:10px;font-size:13px">
+        <div class="row" style="gap:10px;align-items:flex-start">
+          <span class="mono small" style="color:var(--accent)">1</span>
+          <span>Application <span class="mono small">{{ next_id }}</span> is created
+            in stage <b>Invited</b></span></div>
+        <div class="row" style="gap:10px;align-items:flex-start">
+          <span class="mono small" style="color:var(--accent)">2</span>
+          <span>The member contact receives the portal invitation</span></div>
+        <div class="row" style="gap:10px;align-items:flex-start">
+          <span class="mono small" style="color:var(--accent)">3</span>
+          <span>The time-to-onboard clock starts, visible on the pipeline</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="sec">No documents yet</h2>
+      <p class="small muted" style="margin:0">Service Management doesn't collect
+        anything — the member submits directly, and Operations takes it from there.
+        You'll follow progress on the pipeline.</p>
+    </div>
+
+    <div class="row" style="gap:10px">
+      <a class="btn grow" href="{{ url_for('pipeline') }}">Cancel</a>
+      <button class="btn primary" style="flex:1.6" type="submit">Send invitation →</button>
+    </div>
+  </div>
+</form>
+{% endblock %}
