@@ -168,8 +168,23 @@ def all_apps(db):
 
 
 def app_docs(db, app_id):
+    """The checklist for one application, in DOCUMENTS order.
+
+    Backfills any document added to the checklist after this application was
+    created. Without it, adding an entry to DOCUMENTS breaks every existing
+    application — the checklist is configuration, so a change to it has to
+    reach work already in flight.
+    """
     rows = db.execute("SELECT * FROM documents WHERE app_id=?", (app_id,)).fetchall()
     by_id = {r["doc_id"]: r for r in rows}
+    missing = [d["id"] for d in DOCUMENTS if d["id"] not in by_id]
+    if missing:
+        db.executemany("INSERT INTO documents (app_id, doc_id) VALUES (?,?)",
+                       [(app_id, doc_id) for doc_id in missing])
+        db.commit()
+        rows = db.execute("SELECT * FROM documents WHERE app_id=?",
+                          (app_id,)).fetchall()
+        by_id = {r["doc_id"]: r for r in rows}
     return [(d, by_id[d["id"]]) for d in DOCUMENTS]
 
 

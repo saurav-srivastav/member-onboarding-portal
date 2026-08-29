@@ -90,7 +90,7 @@ out of step with what actually happened.
 ./.venv/bin/python test_app.py
 ```
 
-40 checks walking one member from invitation to live, through every actor —
+41 checks walking one member from invitation to live, through every actor —
 including the validation gates, the per-document return loop, and the
 Ops-routing rule above.
 

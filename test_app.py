@@ -192,7 +192,21 @@ client.post(f"/tech/{app_id}/live", follow_redirects=True)
 d = db()
 ok("stage is LIVE", M.get_app(d, app_id)["stage"] == "LIVE")
 
-print("\n11 · The metric falls out of the stage history")
+print("\n11 · A document added to the checklist reaches applications in flight")
+import documents as D  # noqa: E402
+D.DOCUMENTS.append({"id": "business-continuity-plan",
+                    "name": "Business Continuity Plan",
+                    "description": "BCP covering trading and settlement.",
+                    "formats": ["pdf", "docx"]})
+D.DOCS_BY_ID[D.DOCUMENTS[-1]["id"]] = D.DOCUMENTS[-1]
+d = db()
+rows = M.app_docs(d, app_id)  # must not raise for an application created earlier
+ok("the new document is backfilled onto an existing application",
+   len(rows) == 10 and rows[-1][1]["status"] == "PENDING")
+D.DOCUMENTS.pop()
+D.DOCS_BY_ID.pop("business-continuity-plan")
+
+print("\n12 · The metric falls out of the stage history")
 d = db()
 tl = M.timeline(d, M.get_app(d, app_id))
 ok("every stage on the timeline is complete",

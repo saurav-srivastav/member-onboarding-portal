@@ -1,0 +1,272 @@
+<title>Portal Code Walkthrough</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #faf9f7; --card: #ffffff; --ink: #1a2332; --muted: #5a6473;
+    --faint: #8b95a5; --line: #e4e1db; --panel: #f1efeb;
+    --accent: #c0392f; --accent-soft: #fbeeec;
+    --ok: #2e7d4f; --ok-soft: #ecf5ef;
+    --warn: #b07d1e; --warn-soft: #fdf6ec; --warn-line: #e4dcc9;
+    --mono-bg: #eceae5;
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --paper: #14181f; --card: #1b202a; --ink: #e8e6e1; --muted: #9aa3b0;
+      --faint: #79828f; --line: #2b313c; --panel: #1b202a;
+      --accent: #e05c50; --accent-soft: #2a1d1c;
+      --ok: #5cb884; --ok-soft: #17251c;
+      --warn: #d4a548; --warn-soft: #241d10; --warn-line: #3a3020;
+      --mono-bg: #232936;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14181f; --card: #1b202a; --ink: #e8e6e1; --muted: #9aa3b0;
+    --faint: #79828f; --line: #2b313c; --panel: #1b202a;
+    --accent: #e05c50; --accent-soft: #2a1d1c;
+    --ok: #5cb884; --ok-soft: #17251c;
+    --warn: #d4a548; --warn-soft: #241d10; --warn-line: #3a3020;
+    --mono-bg: #232936;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font: 16px/1.6 "IBM Plex Sans", -apple-system, "Segoe UI", sans-serif; }
+  .page { max-width: 78ch; margin: 0 auto; padding: 52px 24px 96px; }
+
+  .kicker { font: 500 12px/1 "IBM Plex Mono", monospace; letter-spacing: .14em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+  h1 { font-family: "Schibsted Grotesk", sans-serif; font-size: 36px; font-weight: 700;
+       line-height: 1.12; letter-spacing: -.015em; margin: 0 0 10px; text-wrap: balance; }
+  .sub { color: var(--muted); font-size: 17px; margin: 0 0 22px; max-width: 60ch; }
+  .meta { display: flex; flex-wrap: wrap; gap: 6px 24px; padding: 13px 0;
+          border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+          font-size: 13px; color: var(--muted); margin-bottom: 44px; }
+  .meta b { color: var(--ink); font-weight: 600; }
+
+  section { margin-bottom: 46px; }
+  h2 { font-family: "Schibsted Grotesk", sans-serif; font-size: 21px; font-weight: 700;
+       letter-spacing: -.01em; margin: 0 0 14px; display: flex; align-items: baseline;
+       gap: 12px; text-wrap: balance; }
+  h2 .n { font: 500 13px "IBM Plex Mono", monospace; color: var(--accent); flex: none; }
+  h3 { font-family: "Schibsted Grotesk", sans-serif; font-size: 15.5px; font-weight: 600;
+       margin: 24px 0 8px; }
+  p { margin: 0 0 13px; }
+  ul, ol { margin: 0 0 13px; padding-left: 22px; }
+  li { margin-bottom: 7px; }
+  li::marker { color: var(--faint); }
+  strong { font-weight: 600; }
+
+  code { font: 500 13.5px "IBM Plex Mono", monospace; background: var(--mono-bg);
+         padding: 2px 6px; border-radius: 4px; }
+  pre { background: var(--mono-bg); border-radius: 7px; padding: 14px 16px;
+        overflow-x: auto; margin: 12px 0; }
+  pre code { background: none; padding: 0; font-size: 13px; line-height: 1.65; }
+
+  .say { background: var(--ok-soft); border-left: 3px solid var(--ok);
+         border-radius: 0 7px 7px 0; padding: 14px 18px; margin: 14px 0; font-size: 15px; }
+  .say b { color: var(--ok); }
+  .warn { background: var(--warn-soft); border-left: 3px solid var(--warn);
+          border-radius: 0 7px 7px 0; padding: 14px 18px; margin: 14px 0; font-size: 15px; }
+  .warn b { color: var(--warn); }
+  .key { background: var(--panel); border-left: 3px solid var(--accent);
+         border-radius: 0 7px 7px 0; padding: 14px 18px; margin: 14px 0; font-size: 15px; }
+
+  .tablewrap { overflow-x: auto; margin: 16px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th { text-align: left; font: 500 11px "IBM Plex Mono", monospace; letter-spacing: .08em;
+       text-transform: uppercase; color: var(--faint); padding: 8px 14px 8px 0;
+       border-bottom: 1px solid var(--ink); white-space: nowrap; }
+  td { padding: 10px 14px 10px 0; border-bottom: 1px solid var(--line);
+       vertical-align: top; }
+  td:first-child { font-weight: 600; }
+  td code { font-size: 12.5px; white-space: nowrap; }
+
+  .map { background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+         padding: 18px 20px; margin: 16px 0; font: 400 13.5px/1.9 "IBM Plex Mono", monospace;
+         overflow-x: auto; }
+  .map .f { color: var(--ink); font-weight: 500; }
+  .map .c { color: var(--muted); }
+  .map .hot { color: var(--accent); font-weight: 500; }
+
+  .q { border-bottom: 1px solid var(--line); padding-bottom: 16px; margin-bottom: 16px; }
+  .q:last-child { border-bottom: none; }
+  .q .ask { font-weight: 600; margin-bottom: 6px; }
+  .q .ask::before { content: "Q  "; font-family: "IBM Plex Mono", monospace;
+                    color: var(--accent); font-size: 13px; }
+  .q p { margin: 0 0 8px; color: var(--muted); }
+  .q p:last-child { margin-bottom: 0; }
+
+  footer { border-top: 1px solid var(--line); padding-top: 18px; font-size: 13.5px;
+           color: var(--muted); }
+</style>
+
+<div class="page">
+  <div class="kicker">Interview prep · code round</div>
+  <h1>Portal Code Walkthrough</h1>
+  <p class="sub">What the member-onboarding portal is made of, where every knob lives, and how to change one while someone watches.</p>
+  <div class="meta">
+    <span>Repo: <b>member-onboarding-portal</b></span>
+    <span>Stack: <b>Flask · SQLite · Jinja</b></span>
+    <span>~<b>1,500</b> lines Python, <b>1,600</b> templates</span>
+  </div>
+
+  <section>
+    <h2><span class="n">1</span>The sixty-second answer</h2>
+    <p>If he opens with “walk me through it”, this is the whole thing — say it in this order and stop:</p>
+    <div class="say">
+      <b>Four Python files and a templates folder.</b> <code>app.py</code> is routes only — HTTP in, HTML out, no business logic. <code>models.py</code> holds the schema, the state machine and the metrics; every database write goes through it. <code>documents.py</code> is pure configuration — the checklist and the form, no logic at all. <code>seed.py</code> builds the demo data. The rule I kept was that routes never touch SQL and never change a stage directly — they call a named function in <code>models.py</code>, so the state machine has exactly one door.
+    </div>
+    <p>That last sentence is the one that matters. It is a structural claim he can test, and it is true.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>The map</h2>
+    <div class="map">
+<span class="f">app.py</span>            <span class="c">491 lines · routes, one section per persona</span>
+<span class="f">models.py</span>         <span class="c">477 lines · schema, state machine, metrics — all SQL lives here</span>
+<span class="hot">documents.py</span>      <span class="c">130 lines · the checklist + form definition. Config, no logic</span>
+<span class="f">seed.py</span>           <span class="c">232 lines · demo applications, dates relative to today</span>
+<span class="f">test_app.py</span>       <span class="c">222 lines · one member, invitation → live, 41 checks</span>
+<span class="f">templates/</span>
+  <span class="f">base.html</span>       <span class="c">the design system + role switcher — every page extends it</span>
+  <span class="f">_macros.html</span>    <span class="c">stage strip, timeline, status pills — shared components</span>
+  <span class="f">member_*.html</span>   <span class="c">form → documents → review → status → live</span>
+  <span class="f">ops_*.html</span>      <span class="c">queue + application detail</span>
+  <span class="f">compliance_*</span>    <span class="c">queue + review/decision</span>
+  <span class="f">tech_*</span>          <span class="c">provisioning queue + checklist</span>
+  <span class="f">pipeline.html</span>   <span class="c">Service Management — all applications, metrics</span></div>
+    <p>Five tables, and the shape of them is the design: <code>applications</code> (one row per application, current stage on it), <code>stage_history</code> (append-only, one row per transition), <code>documents</code> (per application × document, with a <code>returns</code> counter), <code>clarifications</code> (the Ops-routed queries, carrying the <code>TO_ROUTE</code> state), and <code>provisioning_tasks</code>. Schema is <code>models.py:52</code> — one <code>executescript</code>, readable in a minute.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>The two decisions worth leading with</h2>
+
+    <h3>Metrics are derived, never stored</h3>
+    <p>Every stage change writes a timestamped row into <code>stage_history</code> (<code>models.set_stage</code>, line 149). Time-to-onboard, time-in-stage, first-time-right and round-trips are all computed from that history in <code>models.metrics</code> (line 455). There is no <code>duration</code> column anywhere.</p>
+    <div class="key"><b>Why it matters, in his language:</b> a stored duration drifts the moment anyone corrects a record by hand. Deriving it means the number cannot disagree with what actually happened — and the audit trail and the metric are the same object, so you get the operations-reporting view for free.</div>
+    <p>This is also the JD's “north-star metric made observable” expressed in a schema rather than a slide. If he asks how you would prove the portal moved the metric, the answer is that the portal <em>is</em> the instrument.</p>
+
+    <h3>The Operations-only channel is enforced in state, not in the UI</h3>
+    <p>A KYC-vendor or Compliance query is created with status <code>TO_ROUTE</code>. The member's view queries only <code>OPEN</code> items. It becomes <code>OPEN</code> exclusively through <code>models.route_to_member</code> (line 413), which Ops triggers.</p>
+    <div class="key"><b>The point:</b> hiding it in the template would be a UI convention that the next developer breaks by accident. Making it a state the member's query cannot reach makes the rule structural. <code>test_app.py</code> asserts the member's page does not contain the query text before routing, and does after.</div>
+
+    <h3>The return loop is per-document</h3>
+    <p><code>models.return_doc</code> (line 371) moves <em>one</em> document to <code>RETURNED</code>, raises a clarification carrying the reason, and sends the application back to <code>DOCUMENTS</code>. Everything else keeps its status. When the member re-uploads, <code>maybe_return_to_ops</code> (line 342) puts it back in the Ops queue without a fresh submission. That is the email round-trip collapsed into one document.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">4</span>Where to change what</h2>
+    <p>He is more likely to ask “where would you change X?” than to ask you to write code. Know this table cold.</p>
+    <div class="tablewrap">
+    <table>
+      <tr><th>To change</th><th>Go to</th><th>Notes</th></tr>
+      <tr><td>A required document</td><td><code>documents.py:8</code> — <code>DOCUMENTS</code></td>
+          <td>Add a dict with <code>id</code>, <code>name</code>, <code>description</code>, <code>formats</code>. Nothing else to touch — the checklist, upload validation, Ops review and Compliance pack all read this list.</td></tr>
+      <tr><td>Accepted file formats</td><td>same entry, <code>formats</code></td>
+          <td>Drives the <code>accept=</code> attribute, the validation in <code>app.py:223</code>, and the on-screen label. One source.</td></tr>
+      <tr><td>A form field</td><td><code>documents.py:86</code> — <code>FORM_SECTIONS</code></td>
+          <td>Fields render, save and validate off this. <code>contact_phone</code> is the only optional one — that exception is in <code>models.form_missing</code>, line 207.</td></tr>
+      <tr><td>Stall thresholds (SLA)</td><td><code>models.py:34</code> — <code>SLA_DAYS</code></td>
+          <td>Per stage, in days. Feeds the amber/red flags in the Ops queue and pipeline via <code>sla_state</code>, line 232.</td></tr>
+      <tr><td>A pipeline stage</td><td><code>models.py:19</code> — <code>STAGES</code></td>
+          <td>Plus <code>STAGE_LABELS</code> and <code>STAGE_OWNERS</code> below it. The timeline and strip build themselves from these three.</td></tr>
+      <tr><td>Return-reason templates</td><td><code>documents.py:125</code></td>
+          <td>The one-click reasons Ops sees. Pure copy.</td></tr>
+      <tr><td>Provisioning checklist</td><td><code>models.py:37</code></td>
+          <td>Created automatically on approval, in <code>set_stage</code>.</td></tr>
+      <tr><td>Upload size limit</td><td><code>app.py:22</code> — <code>MAX_SIZE_MB</code></td>
+          <td>Also wired to Flask's <code>MAX_CONTENT_LENGTH</code> and the 413 handler.</td></tr>
+      <tr><td>Demo data</td><td><code>seed.py</code></td>
+          <td>Destructive — deletes and rebuilds <code>portal.db</code>.</td></tr>
+      <tr><td>Look and feel</td><td><code>templates/base.html</code></td>
+          <td>All colour and type tokens are in one <code>:root</code> block at the top.</td></tr>
+    </table>
+    </div>
+    <div class="warn"><b>The shape of the answer he wants:</b> “most changes are configuration, not code — the checklist, the stages and the SLAs are data at the top of two files, and everything downstream reads them.” Then name the one thing that is <em>not</em> config: adding a stage also means deciding who owns it and what transition opens it, which is a state-machine change in <code>models.py</code>, not a list edit.</div>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span>Three live-change drills</h2>
+    <p>Practise these once each so your hands know them. Debug mode is on, so the server reloads on save — no restart needed.</p>
+
+    <h3>Tighten the Ops review SLA from 3 days to 2</h3>
+    <p><code>models.py:34</code>, change <code>"OPS_REVIEW": 3</code> to <code>2</code>, save, refresh <code>/ops</code>. On freshly seeded data, <strong>Straits Derivatives</strong> picks up an amber flag it did not have, and the tile's “approaching” count goes from 1 to 2. <strong>Say why it is visible immediately:</strong> the flag is computed per request from the stage-entry timestamp — <code>sla_state</code>, line 232 — and is not stored on the row, so changing the threshold reclassifies history as well as new work.</p>
+
+    <h3>Add a tenth required document</h3>
+    <p>Append to <code>DOCUMENTS</code> in <code>documents.py</code>:</p>
+    <pre><code>{
+    "id": "business-continuity-plan",
+    "name": "Business Continuity Plan",
+    "description": "Your BCP covering trading and settlement operations.",
+    "formats": ["pdf", "docx"],
+},</code></pre>
+    <p>Refresh the member's document page — it appears with the right formats and validation, on applications that already existed, and Meridian's outstanding count goes from 1 to 2.</p>
+    <div class="key"><b>This drill is worth telling as a story, because it found a real bug.</b> The first version of <code>app_docs</code> assumed every configured document had a database row, so adding one to the checklist raised a <code>KeyError</code> on every application created before the change — the config edit looked harmless and took the whole portal down. The fix (<code>models.py:170</code>) backfills missing rows on read, and there is now a test for it. Two useful things to say: I only found it because I tried the change rather than reasoning about it; and the deeper answer is that a production system would <em>version</em> the checklist and snapshot the required list onto each application at creation, so changing today's requirements does not retroactively alter an application decided last year — which matters for an audit trail.</div>
+
+    <h3>Make the member's phone number mandatory</h3>
+    <p><code>models.py:207</code>, in <code>form_missing</code>, remove the <code>fid != "contact_phone"</code> exclusion. Submission is now blocked until it is filled, and the form-progress panel shows the gap. One line, two screens change — that is the separation working.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">6</span>Running it</h2>
+    <p><strong>Re-seed before any demo.</strong> The seed dates are relative to the day you run it, so the story drifts: Pacific Rim reads 9 days over SLA on seed day and 11 today. One command puts it back.</p>
+    <pre><code>cd ~/Documents/projects/member-onboarding-portal
+./.venv/bin/python seed.py        # reset demo data (destructive)
+./.venv/bin/python app.py         # start — http://localhost:5001
+./.venv/bin/python test_app.py    # 41 checks, invitation → live</code></pre>
+    <p>Stop with <code>Ctrl+C</code>; if the port is stuck, <code>lsof -ti:5001 | xargs kill</code>.</p>
+    <p>The single most persuasive thing to show, if there is a screen: on the Ops detail page for Nikko Futures, click <strong>Route to member</strong>, then switch to the Member role. The vendor's question is now in their clarifications and was not there thirty seconds earlier. That demonstrates the state rule rather than describing it.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">7</span>Where it breaks — say these before he finds them</h2>
+    <p>He tests delivery realism. Volunteering the limits is worth more than defending the build.</p>
+    <ul>
+      <li><strong>SQLite and concurrency.</strong> Fine for one Ops user and low volume; two people accepting documents on the same application at once is a write-lock waiting to happen. Postgres is the swap, and because all SQL is in one module it is a contained change.</li>
+      <li><strong>No authentication.</strong> The role switcher is a stand-in. Every route trusts the URL — <code>/ops/MEM-2026-037</code> is reachable by anyone. Deliberate for a prototype, unshippable without SSO and per-role authorisation.</li>
+      <li><strong>Uploads are unscanned.</strong> Extension and size are validated, content is not. Real onboarding needs malware scanning and probably content checks before anything reaches a reviewer.</li>
+      <li><strong>One application per member.</strong> No concept of a firm applying for a second membership class, which a real exchange needs.</li>
+      <li><strong>Metrics recompute on every page load.</strong> Fine at nine applications, wrong at nine thousand — it walks every application's documents. Cache or aggregate when it matters, not before.</li>
+      <li><strong>No notifications.</strong> The PRD specifies email on stage change; the portal holds the state they would link to, but nothing sends.</li>
+      <li><strong>Hardcoded secret key</strong> (<code>app.py:25</code>), labelled prototype-only. Correct for a demo with no sessions to protect, and the first thing to move to an environment variable.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2><span class="n">8</span>Questions he is likely to ask</h2>
+
+    <div class="q">
+      <div class="ask">You built this with Claude Code. What did <em>you</em> decide?</div>
+      <p>The ones that shaped the data model, and you can point at each: Operations as the single channel — which is why clarifications have a <code>TO_ROUTE</code> state at all; per-stage SLAs rather than one global threshold, because the stages differ by an order of magnitude in expected duration; the application form filled in-portal rather than uploaded, which is what makes field-level validation possible; and sequencing the KYC vendor API second, which is why Ops records dispatches and results manually today.</p>
+      <p>Then the honest half: the AI wrote the code fast, and the review is where the work was. Three examples you can name — the internal screens could originally see the document pack but not the submitted form answers, which is a real hole once the form stops being a PDF; the first-time-right metric read 100% because the seed data never recorded the returns that had actually happened, so the number was flattering and wrong; and adding a document to the checklist crashed every existing application, which I only found by making the change instead of reasoning about it.</p>
+      <p>That last one is the most useful thing to say about working this way. Generated code compiles and runs, which is exactly what makes it dangerous — a clean start-up tells you nothing about whether it is right. What earns the speed is checking output against a case you already know the answer to.</p>
+    </div>
+
+    <div class="q">
+      <div class="ask">How would you hand this to an engineering team?</div>
+      <p>As the specification, not the implementation. The PRD gives the stages and the rules, the schema gives the data model, and <code>test_app.py</code> is executable acceptance criteria — forty-one checks that state what the system must do, in the order a member experiences it. A team can rewrite every line in their own stack and keep those assertions as the contract.</p>
+    </div>
+
+    <div class="q">
+      <div class="ask">What happens if the vendor never comes back?</div>
+      <p>Today: it sits in <code>KYC</code>, the per-stage SLA flags it amber then red on the Ops queue and the pipeline, and it is visibly stalled. What it does <em>not</em> do is escalate to anyone — the PRD specifies reminder notifications and they are not built. That is the honest answer, and the fix is a scheduled job reading the same <code>stage_history</code> the flags already use.</p>
+    </div>
+
+    <div class="q">
+      <div class="ask">Why SQLite? / Why Flask?</div>
+      <p>Because the point was to make the flow decidable, not to pick a production stack. SQLite means no infrastructure between an idea and a working screen, and Flask means the routes read like the process. Both are swaps a team makes on day one — and neither choice leaks into the design, because the schema and the state machine are the parts worth keeping.</p>
+    </div>
+
+    <div class="q">
+      <div class="ask">Show me where you would add a rule — say, financials must be under 18 months old.</div>
+      <p>That is not a format check, so it does not belong in the upload path. It is a review criterion: a field on the document entry in <code>documents.py</code> for the reviewer prompt, surfaced in the Ops accept/return panel as a checklist item, with the return-reason template already there. If it later needs to be automatic, it becomes a document-metadata question — you would have to capture the statement date at upload, which is a form field, not a file property.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">9</span>Two rules for the room</h2>
+    <div class="warn"><b>Do not assert how the exchange works internally.</b> He ran digital and depository services there for seven years. Frame every domain claim as a design assumption you made and would test — “I assumed Operations owns the vendor relationship; if that sits elsewhere the routing changes but the state machine does not.” Assumptions invite correction; assertions invite contradiction.</div>
+    <div class="say"><b>Own the AI use plainly.</b> He knows. The credible position is not that you wrote it by hand — it is that you can navigate it, change it, and name what is wrong with it. This document is that claim: the map, the knobs, the limits. If you can do the third drill in front of him and say what it breaks, the question is answered.</div>
+  </section>
+
+  <footer>One page, one screen, one honest limit — that is the whole preparation. If you have ten minutes before the call, re-run <code>seed.py</code>, do the SLA drill once, and re-read section 7.</footer>
+</div>
